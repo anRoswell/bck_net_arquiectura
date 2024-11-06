@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportorden" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9e45bbd1-436d-487e-8f2e-54f1115c5a51">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFE4BF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFF4E6">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Ds_Principal" uuid="f6975436-264e-42d8-a584-d333ea87c19e">
+		<parameter name="IdOrdenInterno" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString language="SQL">
+			<![CDATA[select distinct
+      nvl(a.id_orden,-1) as id_orden
+     ,c.localidad
+     ,min(nvl(d.acta,'0')) over() as acta
+     ,a.numero_orden
+     ,nvl(b.codigo_tipo_orden,-1) as codigo_tipo_orden
+     ,nvl(b.descripcion,-1) as descripcion_tipo_orden
+     ,nvl(c.nic,-1) as nic
+     ,'residencial estrato' as tipo_cliente
+     ,c.nombre_cliente
+     ,c.direccion
+     ,nvl(f.nombre,'na') as nombre_barrio
+     --,c.georreferencia
+     ,to_number(json_value(nvl(c.georreferencia,'{"longitud":null,"latitud":null}'), '$.longitud'), '9999.99999999') longitud_cliente
+     ,to_number(json_value(nvl(c.georreferencia,'{"longitud":null,"latitud":null}'), '$.latitud'), '9999.99999999') latitud_cliente
+     ,sum(d.mt) over() as mt
+     ,sum(d.ct) over() as ct
+     ,nvl(c.carga_contratada,'na') as carga_contratada
+     ,d.id_contratista_persona as tecnico
+     ,e1.nombre_contratista_persona
+     ,min(d.fecha_ejecucion) over() as fechaejecucion
+     ,min(d.fecha_inicio_ejecucion) over() as fechainicial
+     ,min(d.fecha_fin_ejecucion) over() as fechafinal
+from aire.ord_ordenes a
+left join aire.gnl_clientes                     c  on c.id_cliente = a.id_cliente
+left join aire.ord_ordenes_gestion              d  on d.id_orden = a.id_orden
+left join aire.v_ctn_contratistas_persona       e1 on e1.id_contratista_persona = d.id_contratista_persona
+left join aire.ord_tipos_orden                  b  on b.id_tipo_orden = a.id_tipo_orden
+left join aire.gnl_barrios                      f  on f.id_barrio = c.id_barrio
+where a.id_orden = 2177]]>
+		</queryString>
+		<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+		<field name="LOCALIDAD" class="java.lang.String"/>
+		<field name="ACTA" class="java.math.BigDecimal"/>
+		<field name="NUMERO_ORDEN" class="java.lang.String"/>
+		<field name="CODIGO_TIPO_ORDEN" class="java.lang.String"/>
+		<field name="DESCRIPCION_TIPO_ORDEN" class="java.lang.String"/>
+		<field name="NIC" class="java.lang.String"/>
+		<field name="TIPO_CLIENTE" class="java.lang.String"/>
+		<field name="NOMBRE_CLIENTE" class="java.lang.String"/>
+		<field name="DIRECCION" class="java.lang.String"/>
+		<field name="NOMBRE_BARRIO" class="java.lang.String"/>
+		<field name="LONGITUD_CLIENTE" class="java.math.BigDecimal"/>
+		<field name="LATITUD_CLIENTE" class="java.math.BigDecimal"/>
+		<field name="MT" class="java.math.BigDecimal"/>
+		<field name="CT" class="java.math.BigDecimal"/>
+		<field name="CARGA_CONTRATADA" class="java.lang.String"/>
+		<field name="TECNICO" class="java.math.BigDecimal"/>
+		<field name="NOMBRE_CONTRATISTA_PERSONA" class="java.lang.String"/>
+		<field name="FECHAEJECUCION" class="java.sql.Timestamp"/>
+		<field name="FECHAINICIAL" class="java.sql.Timestamp"/>
+		<field name="FECHAFINAL" class="java.sql.Timestamp"/>
+	</subDataset>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="197" y="24" width="100" height="20" uuid="a1494bad-847c-4a53-825d-4bfc2790d7ba"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[TITULO]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table" style="table" x="0" y="0" width="456" height="92" uuid="f620c01c-2c67-40fe-847a-ed2a3ff32ef9"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Ds_Principal" uuid="62bbee4f-26ba-4af7-b89e-fe5b830315af">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="7731ca7c-5dd4-429f-8c98-d7f9421a135b">
+						<jr:tableHeader style="table_TH" height="30"/>
+						<jr:tableFooter style="table_TH" height="30"/>
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="c7bd05fe-fb31-43bb-9030-3494dbf8e4d2"/>
+								<text><![CDATA[ID_ORDEN]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="30"/>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="4930e341-134b-4c66-b5d7-101b70dd1afd"/>
+								<textFieldExpression><![CDATA[$F{ID_ORDEN}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="46acdc47-0653-48ce-99db-6d758df670d5">
+						<jr:tableHeader style="table_TH" height="30"/>
+						<jr:tableFooter style="table_TH" height="30"/>
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="d1880cd2-948a-4f29-b12a-aed62833b74f"/>
+								<text><![CDATA[LOCALIDAD]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="30"/>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="668fe500-1347-474c-a9cf-0fb343681fcf"/>
+								<textFieldExpression><![CDATA[$F{LOCALIDAD}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="c77ede1d-1c31-42d2-8bc5-ef000584b520">
+						<jr:tableHeader style="table_TH" height="30"/>
+						<jr:tableFooter style="table_TH" height="30"/>
+						<jr:columnHeader style="table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="d9ffd9be-45ab-45f0-8a52-2148d41a2a98"/>
+								<text><![CDATA[ACTA]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="30"/>
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="7336e98e-ecba-4029-ad40-d51c587f71c9"/>
+								<textFieldExpression><![CDATA[$F{ACTA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

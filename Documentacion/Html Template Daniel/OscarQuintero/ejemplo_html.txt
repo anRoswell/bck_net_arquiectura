@@ -1,0 +1,104 @@
+public static string DetailInvoice(ModelFactura factura, string cufe)
+        {
+            var html = new StringBuilder("<table width='100%' style='font-size:9pt'>");
+
+            //Colgroups
+            html.Append("<colgroup>");
+            html.Append("<col width='26%' />");
+            html.Append("<col width='5%' />");
+            html.Append("<col width='5%' />");
+            html.Append("<col width='17%' />");
+            html.Append("<col width='17%' />");
+            html.Append("<col width='17%' />");
+            html.Append("<col width='17%' />");
+            html.Append("</colgroup>");
+
+            //salto
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+
+            // Empresa
+            html.Append("<tr><td colspan='7' style='font-size:12pt; line-height:8pt;' align='center'>" + factura.empresa_nombre + "</td></tr>");
+            html.Append("<tr><td colspan='7' style='font-size:10pt; line-height:8pt;' align='center'>NIT: " + factura.empresa_nit + "</td></tr>");
+
+            //salto
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+
+            //Datos empresa
+            html.Append("<tr><td colspan='3' style='font-size:7pt; line-height:7pt;'>" + factura.empresa_direccion + "</td><td colspan='4' style='font-size:7pt; line-height:7pt;' align='right'>Resolución DIAN: " + factura.numeracion_resolucion + " autorizada el " + factura.numeracion_fecha + "</td></tr>");
+            html.Append("<tr><td colspan='3' style='font-size:7pt; line-height:7pt;'>" + factura.empresa_ubicacion + "</td><td colspan='4' style='font-size:7pt; line-height:7pt;' align='right'>Prefijo: " + factura.prefijo + " de " + factura.numeracion_inicial + " al " + factura.numeracion_final + " </td></tr>");
+            html.Append("<tr><td colspan='3' style='font-size:7pt; line-height:7pt;'>" + factura.empresa_telefonos_contacto + "</td><td colspan='4' style='font-size:7pt; line-height:7pt;' align='right'>" + factura.empresa_responsable + "</td></tr>");
+            html.Append("<tr><td colspan='7' style='font-size:7pt; line-height:7pt;'>" + factura.empresa_correo + "</td></tr>");
+            html.Append("<tr><td colspan='7' style='font-size:7pt; line-height:7pt;'>" + factura.empresa_sitio_web + "</td></tr>");
+
+            // Información contacto
+
+            //salto
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+            html.Append("<tr><td colspan='7'></td></tr>");
+
+            // Cufe
+            html.Append("<tr><td colspan='7' style='font-size:6pt; line-height:6pt;' align='right'>CUFE: " + cufe + "</td></tr>");
+
+            // espacio
+            html.Append("<tr><td colspan='7' style='border-bottom:1pt solid gray'></td></tr>");
+
+            // Datos facturas
+            html.Append("<tr border='0.5'><td colspan='2' style='font-size:8t; line-height:8pt;'>FACTURA NÚMERO:</td><td colspan='5' style='font-size:8t; line-height:8pt;'>" + factura.prefijo + factura.consecutivo.ToString() + "</td></tr>");
+            html.Append("<tr border='0.5'><td colspan='2' style='font-size:8t; line-height:8pt;'>FECHA:</td><td colspan='5' style='font-size:8t; line-height:8pt;'>" + factura.fecha + "</td></tr>");
+            html.Append("<tr border='0.5'><td colspan='2' style='font-size:8t; line-height:8pt;'>FECHA VENCIMIENTO:</td><td colspan='5' style='font-size:8t; line-height:8pt;'>" + factura.fecha_vencimiento + "</td></tr>");
+            html.Append("<tr border='0.5'><td colspan='2' style='font-size:8t; line-height:8pt;'>CLIENTE:</td><td colspan='5' style='font-size:8t; line-height:8pt;'>" + factura.cliente_nombre + "</td></tr>");
+            html.Append("<tr border='0.5'><td colspan='2' style='font-size:8t; line-height:8pt;'>DOCUMENTO:</td><td colspan='5' style='font-size:8t; line-height:8pt;'>" + factura.cliente_abv_tipo_documento + ' ' + factura.cliente_documento + "</td></tr>");
+            html.Append("<tr border='0.5'><td colspan='2' style='font-size:8t; line-height:8pt;'>DIRECCION:</td><td colspan='5' style='font-size:8t; line-height:8pt;'>" + factura.cliente_direccion + "</td></tr>");
+
+            // espacio
+            html.Append("<tr><td colspan='7' style='border-bottom:1pt solid gray'></td></tr>");
+
+            // Header
+            html.Append("<th border='0.5' colspan='2' align='left' style='font-size:8t; line-height:8pt;'>PRODUCTO</th>");
+            html.Append("<th border='0.5' align='right' style='font-size:8t; line-height:8pt;'>#</th>");
+            html.Append("<th border='0.5' align='right' style='font-size:8t; line-height:8pt;'>UNITARIO</th>");
+            html.Append("<th border='0.5' align='right' style='font-size:8t; line-height:8pt;'>IMPUESTOS</th>");
+            html.Append("<th border='0.5' align='right' style='font-size:8t; line-height:8pt;'>DESCUENTOS</th>");
+            html.Append("<th border='0.5' align='right' style='font-size:8t; line-height:8pt;'>PAGAR</th>");
+
+            // Detalle
+            foreach (var d in factura.detalle_factura)
+            {
+                html.Append("<tr border='0.5'>");
+                html.Append("<td colspan='2' style='font-size:8t; line-height:8pt;'>" + d.nombre + (!String.IsNullOrEmpty(d.descripcion) ? "<br>" + d.descripcion : "" +  "</td>"));
+                html.Append("<td align='right' style='font-size:8t; line-height:8pt;'>" + d.cantidad + "</td>");
+                html.Append("<td align='right' style='font-size:8t; line-height:8pt;'>" + d.valor_unitario.ToString("C", CultureInfo.CurrentCulture) + "</td>");
+                html.Append("<td align='right' style='font-size:8t; line-height:8pt;'>" + d.valor_impuestos.ToString("C", CultureInfo.CurrentCulture) + "</td>");
+                html.Append("<td align='right' style='font-size:8t; line-height:8pt;'>" + d.valor_descuentos.ToString("C", CultureInfo.CurrentCulture) + "</td>");
+                html.Append("<td align='right' style='font-size:8t; line-height:8pt;'>" + d.valor_pagar.ToString("C", CultureInfo.CurrentCulture) + "</td>");
+                html.Append("</tr>");
+            }
+
+            //espacio
+            html.Append("<tr><td colspan='7' style='border-bottom:1pt solid gray'></td></tr>");
+
+            //Totales
+            html.Append("<tr border='0.5'><td colspan='6' style='font-size:8t; line-height:8pt;'>TOTAL COBRO:</td><td align='right' style='font-size:8t; line-height:8pt;'>" + factura.valor_unitario.ToString("C", CultureInfo.CurrentCulture) + "</td></tr>");
+            html.Append("<tr border='0.5'><td colspan='6' style='font-size:8t; line-height:8pt;'>TOTAL IMPUESTOS:</td><td align='right' style='font-size:8t; line-height:8pt;'>" + factura.valor_impuestos.ToString("C", CultureInfo.CurrentCulture) + "</td></tr>");
+            html.Append("<tr border='0.5'><td colspan='6' style='font-size:8t; line-height:8pt;'>TOTAL DESCUENTOS:</td><td align='right' style='font-size:8t; line-height:8pt;'>" + factura.valor_descuentos.ToString("C", CultureInfo.CurrentCulture) + "</td></tr>");
+
+            //espacio
+            html.Append("<tr><td colspan='7' style='border-bottom:1pt solid gray'></td></tr>");
+
+            // total a pagar
+            html.Append("<tr border='0.5'><td colspan='6' style='font-size:8t; line-height:8pt';>TOTAL PAGAR:</td><td align='right' style='font-size:8t; line-height:8pt;'>" + factura.valor_pagado.ToString("C", CultureInfo.CurrentCulture) + "</td></tr>");
+
+            //Termina tabla
+            html.Append("</table>");
+
+            return html.ToString();
+        }

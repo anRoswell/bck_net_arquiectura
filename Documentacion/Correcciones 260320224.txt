@@ -1,0 +1,40 @@
+CORRECCIONES 260320224
+
+---InfoServicioMovilDto en este dto hay que cambiar unos tipos de datos con alex.
+--NoMedidor
+
+
+
+-- En Op360ScrMovilController la orden llega 3 veces
+[6:39 a. m.] Alfonso Navarro
+https://op360.air-e.com:8083/api/Op360ScrMovil/GetOrdenesAsignadasTecnico/3769
+
+GetCargaInicial
+3769
+
+
+
+Móvil: 
+1. Organizar las ordenes por dirección en la parte principal.
+2. EL campo tarifa esta errado. 
+3. Valor de la ultima factura colocar en formato de $. 
+4. Solicitar confirmación de la orden comprometida y que no afecte web service. 
+5. Confirmar que se cargaran los puntos GPS cargados en la ruta. 
+6. Opción en uso de energía (No aplica) no va en las lista, solo debe estar comercial y residencial. 
+7. En el tipo de comercio permitir realizar búsqueda. 
+8. Cambiar nombre de agregar observación subanomalia a agregar caracterización predio.  
+9. En la foto del ítems 8, en el nombre de la foto debe ser Foto acta.
+Web: 
+1. Archivo reporte y lista de pendientes no se encuentra acorde a lo solicitada. 
+2. No se ha validado la generación de los PDF de las actas (No se ha validado en ningún ambiente, deben salir las fotos completas en el PDF). 
+3. Asignación automática fallida, no tiene en cuenta la lógica explicada completamente. Cumplió CGM y control de energía, sin embargo en el caso de atlántico no se cumplió porque todas las ordenes se las asigno a obliqua lo cual es incorrecta.
+4. Cuando se realizará la asignación automática sin botón?  
+5. Pendiente por conocer la frecuencia de actualización de la deuda de las ordenes a traves del web service y con que frecuencia el web service deuda 0 va actuar?.
+6. No se tiene actualmente los permisos necesarios en el rol de consulta, ingresa pero no le permite ver nada. 
+7. Rol territorial no esta parametrizado (Funciones similares a las de área central pero permitiendole solo asignar, reasignar, desasignar ordenes a contratista y tecnicos y demas movimientos entre ellos y la vista de consulta)
+8. Que métricas de capacidad de estrés tendrá la herramienta, Ejemplo tiempo esperado en migración de la ordenes, en la asignación de las ordenes, en la legalización de ordenes?
+9. La configuración de los contratistas no esta completa o acorde a lo solicitado, asociación (técnicos, vehículos, tipo de brigadas, zonas).
+10. Si se requiere realizar alguna modificación de la asignación automática ¡como se realizaría dicha modificación ?.
+11. Cuando se asigno masivamente e individualmente a técnico ordenes las asigno independiente de que el técnico no tuviera una zona asignada, validar las zonas del contrato vs la zona que tiene el técnico no debe permitir asignarle zonas diferentes (Esto se había validado anteriormente y en esta validación de ambiente QA se encuentra fallida).
+12. Para la salida en producción se requiere acceso a base de datos para el seguimiento y reporte de las ordenes. 
+13. Habilitar vista de log legalización en la web para seguimiento de ordenes.

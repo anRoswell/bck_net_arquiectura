@@ -1,0 +1,29 @@
+// FIREBASE => 8181
+docker pull 73197546/firebase_prd_sirion:1.0.1
+podman run -d -p 8181:80 73197546/firebase_prd_sirion:1.0.1    OK
+
+// FRONT END => 8182
+podman run -d -p 8182:80 73197546/front_end_op360_prd_sirion:1.0.2 OK
+
+// Backend SCR / GOS => 8183
+podman run -d -p 8183:80 -v /data/image01/op360files/filesOp360/op360files/scr/files:/app/scr/files -v /data/image01/op360files/filesOp360/op360files/scr/images:/app/scr/images -v /data/image01/op360files/filesOp360/op360files/gos/files:/app/gos/files -v /data/image01/op360files/filesOp360/op360files/gos/images:/app/gos/images 73197546/src_gos_backop360prd:1.0.2  OK
+
+// Backend Obras => 8185
+podman run -d -p 8185:80 -v /data/image01/op360files/obras/files:/app/obras/files -v /data/image01/op360files/obras/images:/app/obras/images syspotecing7/op360obrasbackprodsirion:1.0.0  OK
+ 
+// SOCKET => 8190
+docker pull 73197546/socket_op360_prd:1.0.1
+podman run -d -p 8190:80 73197546/socket_op360_prd:1.0.1 OK
+
+//
+
+
+###################################
+
+DEVELOPER
+
+Backend CTE
+docker pull 73197546/ctebackop360dev:1.0.1
+
+
+

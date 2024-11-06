@@ -1,0 +1,80 @@
+
+SCR
+-- Los datos de api, txt o csv
+
+BD OSF, registro con estado CREADO -> ASIGNADO	
+	:: El sistema debe hacer automaticamente: de osf a op360 todo esto se hace desde la BD (ASIGNACIÓN AUTOMATICA POR BD)
+	:: Perfiles: Area central (AIRe) ve todo lo asignado -> BD OSF (todos los contratistas), perfil contratista solo lo asignado.
+	(END POINT AREA SCR CENTRAL)
+	-> Perfil area central (opciones de asignación y desasignacion)
+		(LISTAR	ORDENES DE TRABAJO ASIGNADOS POR OSF)
+		-> Creación de ordenes de trabajo manual y masivo
+			(CONSULTAR CLIENTE) -> NIC
+			(REGISTRAR ORDEN DE TRABAJO MANUAL) UNO A UNO
+			
+			// ENDPOINTS PARAMETROS PARA CREACION DE ORDENES (LISTADO DE SELECCION)
+			(ENDPOINT DE CARGA INCIAL)
+			JSON -> 	(LISTADO DE TIPO DE ORDEN)
+						(LISTADO DE ESTADO DE ORDEN) / ASIGNADO, PENDIENTE
+						(LISTADO DE CONTRATISTAS)
+						(LISTADO DE TERRITORIOS)
+						(LISTADO DE ZONAS)
+						
+			:: Formulario con los datos de registro (ver Cargue de ordenes manuales.docx)
+			(REGISTRAR REGISTRO MASIVO DE ORDENES DE TRABAJO MASIVO) -> ENVIO ARCHIVO DE EXCEL
+			:: Masivo por excel (Pasar la plantilla)
+		-> Asignación de trabajo a los contratistas
+			:: Contabilización de ordenes: ASIGNADAS PARA PROCESAR y las QUE NO SE ASIGNARON POR FILTROS U OTRO MOTIVO
+			(ASIGNAR MANUAL ORDENES)
+			:: Asignación manual por casos especiales como: QUE NO SE ASIGNARON POR FILTROS U OTRO MOTIVO, *CAMBIOS DE CONTRATISTAS	(para ordenes que no estan gestionada / comprometida / ...)		
+			(PARAMETRIZACION LISTAR / ACTUALIZAR)
+			::(Parametrización de filtro de asignación) -> 	DEFINIR EL ALCANCE
+				Filtro de asignacion de aliados (parametrizado):
+					-> Tipo de suspensión: De acuerdo al monto de la suspension: PESADA, LIGERA, ETC
+					-> Por ubicación: Zona, barrio, xy, loc
+					-> Orden por monto (priorización)
+		-> Desasignacion de trabajo a los contratistas
+			(DESASIGNAR)/idOrden
+			:: Desagsinación por casos especiales (empleados, etc)
+			:: No se puede desasignar una orden que esta gestionada / comprometida / ...
+		-> Dashboard (datatable y mapa)
+			(CONSULTAR ORDENES EJECUTADAS) -> DEFINIR FILTROS GENERALES (FECHA, ZONA, CONTRATISTAS)
+			:: Estadisticas: Estados de ordenes por contratista (Ejecución, pendientes, gestionadas), contratistas, etc
+			:: Datatables con filtros y descargas
+			Ver los recorridos que ha realizado una brigada durante el día
+			Ver las ordenes asignadas por iconografía
+			Mostrar si las ordenes que se han cerrado, la información se ha capturado en el lugar
+			(GENERAR PDF POR ORDEN) (TAREA DEL BACK) Consulta del resultado de cierre de las ordenes en formato PDF en la interfaz en el perfil de Administrador SCR.
+			Visualización de las ordenes por bandeja de aliado y en la bandeja general en el perfil de Administrador SCR y aliado.
+			Reportes (ordenes pendiente, ordenes ejecutadas) en el perfil de Administrador SCR y Aliado.
+			(Datatable) Modulo con la visualización de las ordenes ejecutadas históricas por NIC, FECHAS, TECNICO, TIPO ORDEN y demás filtros disponibles en el perfil de Administrador SCR. (WEB)
+			Reporte de log POR ORDEN de legalización de ordenes de trabajo relacionado con el proceso ejecutado en el requerimiento por cada orden (CUADRO COMPLETO DE LA GESTION - LOG DE LA ORDEN)
+	(END POINT SCR CONTRATISTA)
+	-> Perfil contratista (opciones) -> Ve lo que asigno aire
+		(LISTAR	REGISTROS ASIGNADOS POR AREA CENTRAL)
+		
+		// ENDPOINTS PARAMETROS PARA CREACION DE ORDENES (LISTADO DE SELECCION)
+		(ENDPOINT DE CARGA INCIAL)
+		JSON -> 	(LISTADO DE TIPO DE ORDEN)
+					(LISTADO DE ESTADO DE ORDEN) / ASIGNADO, PENDIENTE										
+					(LISTADO DE BRIGADAS)
+		
+		-> Visualización de ordenes asignadas por Area central
+			(ASIGNAR)
+			:: Asignación de ordenes de trabajo a los tecnicos (brigadas) por criterios sugeridos:
+				:: Por orden o por grupos de ordenes las asignaciones a un tecnicos
+				:: La idea se pueda asignar facilmente y haya claridad de quien tiene la orden
+				:: *Se sugiere por tipo de trabajo: tipo de orden PESADO <-> brigada PESADA (filtro por tipos de ordenes / brigada) (Verificar que la información que tenga sea relacionable) (Aclarar si es obligatorio)
+					-> Le llega a la movil las ordenes asignadas
+		(DESASIGNAR)
+		-> Desasignacion de ordenes a los tecnicos
+			:: No se puede desasignar una orden que esta gestionada / comprometido / ...
+		(CONSULTAR ORDENES EJECUTADAS)
+		-> Dashboard (datatable y mapa)
+			:: Estadisticas: Estados de ordenes por contratista (Ejecución, pendientes, gestionadas), filtros por fechas, contratistas
+			:: Datatables con filtros y descargas
+			Ver los recorridos que ha realizado una brigada durante el día
+			Ver las ordenes asignadas por iconografía
+			Mostrar si las ordenes que se han cerrado, la información se ha capturado en el lugar
+			Visualización de las ordenes por bandeja de aliado
+

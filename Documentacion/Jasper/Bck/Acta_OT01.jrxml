@@ -1,0 +1,1639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="573" leftMargin="11" rightMargin="11" topMargin="11" bottomMargin="11" uuid="688087d7-d452-4395-bc11-3601b241c69d">
+	<property name="ireport.zoom" value="1.4641000000000022"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="471"/>
+	<style name="FondoAzul" mode="Opaque" forecolor="#FFFFFF" backcolor="#273580" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="TablaFieldsAzul" mode="Opaque" forecolor="#FFFFFF" backcolor="#273580" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box>
+			<pen lineColor="#273580"/>
+			<topPen lineColor="#273580"/>
+			<leftPen lineColor="#273580"/>
+			<bottomPen lineColor="#273580"/>
+			<rightPen lineColor="#273580"/>
+		</box>
+	</style>
+	<subDataset name="DsPrincipal" uuid="f241e53c-294f-4e5f-b145-d1f08e4c2111">
+		<parameter name="Ds01IdOrden" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$F{ID_ORDEN}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select distinct
+      nvl(a.id_orden,-1) as id_orden
+     ,a.numero_orden
+     ,nvl(b.codigo_tipo_orden,-1) as codigo_tipo_orden
+     ,nvl(b.descripcion,-1) as descripcion_tipo_orden
+     ,nvl(c.nic,-1) as nic
+     ,'residencial estrato' as tipo_cliente
+     ,c.nombre_cliente
+     ,c.direccion
+     ,nvl(f.nombre,'na') as nombre_barrio
+      -- -- --,c.georreferencia
+     ,to_number(json_value(nvl(c.georreferencia,'{"longitud":null,"latitud":null}'), '$.longitud'), '9999.99999999') longitud_cliente
+     ,to_number(json_value(nvl(c.georreferencia,'{"longitud":null,"latitud":null}'), '$.latitud'), '9999.99999999') latitud_cliente
+     ,sum(d.mt) over() as mt
+     ,sum(d.ct) over() as ct
+     ,nvl(c.carga_contratada,'na') as carga_contratada
+     ,d.id_contratista_persona as tecnico
+     ,e1.nombre_contratista_persona
+     ,min(d.fecha_ejecucion) over() as fechaejecucion
+     ,min(d.fecha_inicio_ejecucion) over() as fechainicial
+     ,min(d.fecha_fin_ejecucion) over() as fechafinal
+from aire.ord_ordenes a
+left join aire.gnl_clientes                     c  on c.id_cliente = a.id_cliente
+left join aire.ord_ordenes_gestion              d  on d.id_orden = a.id_orden
+left join aire.v_ctn_contratistas_persona       e1 on e1.id_contratista_persona = d.id_contratista_persona
+left join aire.ord_tipos_orden                  b  on b.id_tipo_orden = a.id_tipo_orden
+left join aire.gnl_barrios                      f  on f.id_barrio = c.id_barrio
+where a.id_orden = $P{Ds01IdOrden}]]>
+		</queryString>
+		<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+		<field name="NUMERO_ORDEN" class="java.lang.String"/>
+		<field name="CODIGO_TIPO_ORDEN" class="java.lang.String"/>
+		<field name="DESCRIPCION_TIPO_ORDEN" class="java.lang.String"/>
+		<field name="NIC" class="java.lang.String"/>
+		<field name="TIPO_CLIENTE" class="java.lang.String"/>
+		<field name="NOMBRE_CLIENTE" class="java.lang.String"/>
+		<field name="DIRECCION" class="java.lang.String"/>
+		<field name="NOMBRE_BARRIO" class="java.lang.String"/>
+		<field name="LONGITUD_CLIENTE" class="java.math.BigDecimal"/>
+		<field name="LATITUD_CLIENTE" class="java.math.BigDecimal"/>
+		<field name="MT" class="java.math.BigDecimal"/>
+		<field name="CT" class="java.math.BigDecimal"/>
+		<field name="CARGA_CONTRATADA" class="java.lang.String"/>
+		<field name="TECNICO" class="java.math.BigDecimal"/>
+		<field name="NOMBRE_CONTRATISTA_PERSONA" class="java.lang.String"/>
+		<field name="FECHAEJECUCION" class="java.sql.Timestamp"/>
+		<field name="FECHAINICIAL" class="java.sql.Timestamp"/>
+		<field name="FECHAFINAL" class="java.sql.Timestamp"/>
+	</subDataset>
+	<subDataset name="DsDatosMedidos" uuid="078b00ed-2a46-4ee8-82ca-478bc29c4168">
+		<parameter name="Ds02IdOrden" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select
+      nvl(a.id_orden,-1) as id_orden
+     ,a.numero_orden
+     ,d.numero_medidor
+     ,d.lectura
+from aire.ord_ordenes a
+left join aire.ord_ordenes_gestion              d  on d.id_orden = a.id_orden
+where a.id_orden = $P{Ds02IdOrden}]]>
+		</queryString>
+		<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+		<field name="NUMERO_ORDEN" class="java.lang.String"/>
+		<field name="NUMERO_MEDIDOR" class="java.math.BigDecimal"/>
+		<field name="LECTURA" class="java.math.BigDecimal"/>
+	</subDataset>
+	<subDataset name="DsSellos" uuid="454d0a20-406b-46aa-a352-d3ac45ba0a11">
+		<parameter name="Ds03IdOrden" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select
+       op.id_orden
+      ,op.id_serie
+      ,op.id_tipo_operacion
+      ,dv.descripcion
+      ,op.observacion
+from aire.mtr_articulos_operacion op
+left join aire.gnl_dominios_valor dv on dv.id_dominio_valor = op.id_tipo_operacion
+where op.id_orden = $P{Ds03IdOrden}]]>
+		</queryString>
+		<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+		<field name="ID_SERIE" class="java.math.BigDecimal"/>
+		<field name="ID_TIPO_OPERACION" class="java.math.BigDecimal"/>
+		<field name="DESCRIPCION" class="java.lang.String"/>
+		<field name="OBSERVACION" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="DsControl" uuid="2981f160-2980-4b18-8a90-ddba59f5a64b">
+		<parameter name="Ds04IdOrden" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT
+       GI.ID_ORDEN
+      ,CP.ID_CUESTIONARIO_PREGUNTA
+      ,CP.PREGUNTA
+      ,GIR.RESPUESTA
+FROM AIRE.GNL_CUESTIONARIOS_INSTANCIA GI
+LEFT JOIN AIRE.GNL_CUESTIONARIOS_INSTANCIA_RESPUESTA GIR ON GIR.ID_CUESTIONARIO_INSTANCIA = GI.ID_CUESTIONARIO_INSTANCIA
+LEFT JOIN AIRE.GNL_CUESTIONARIOS_PREGUNTA CP ON CP.ID_CUESTIONARIO_PREGUNTA = GIR.ID_CUESTIONARIO_PREGUNTA
+WHERE GI.ID_ORDEN = $P{Ds04IdOrden} AND GI.ID_CUESTIONARIO = 22]]>
+		</queryString>
+		<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+		<field name="ID_CUESTIONARIO_PREGUNTA" class="java.math.BigDecimal"/>
+		<field name="PREGUNTA" class="java.lang.String"/>
+		<field name="RESPUESTA" class="oracle.jdbc.OracleClob"/>
+	</subDataset>
+	<subDataset name="DsObservaciones" uuid="f0fd29ca-eec3-4b1d-8a75-cb968de0e560">
+		<parameter name="Ds05IdOrden" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[with t as (
+      select distinct
+             nvl(a.id_orden,-1) as id_orden
+            ,min(d.fecha_ejecucion) over() as fechaejecucion
+            ,min(nvl(d.acta,'0')) over() as acta
+            ,e1.nombre_contratista_persona
+            ,min(d.NOMBRES_PERSONA_ATIENDE) over() as Persona_Atiende
+            ,min(d.NUMERO_MEDIDOR) over() as Medidor
+            ,min(d.LECTURA) over() as Lectura
+            ,sum(d.mt) over() as mt
+            ,sum(d.ct) over() as ct
+            ,h.ListagFaltante
+      from aire.ord_ordenes a
+      left join aire.gnl_clientes                     c  on c.id_cliente = a.id_cliente
+      left join aire.ord_ordenes_gestion              d  on d.id_orden = a.id_orden
+      left join aire.v_ctn_contratistas_persona       e1 on e1.id_contratista_persona = d.id_contratista_persona
+      left join (
+            select
+                  og.ID_ORDEN
+                  ,LISTAGG(ac.CODIGO || ': ' || oga.OBSERVACION, '; ') as ListagFaltante
+            from aire.ord_ordenes_gestion_acciones oga
+            inner join aire.ORD_ORDENES_GESTION og on og.ID_ORDEN_GESTION = oga.ID_ORDEN_GESTION
+            inner join aire.scr_acciones ac on ac.ID_ACCION = oga.ID_ACCION
+            where og.ID_ORDEN = 93 and ac.IND_ACTIVO = 'S'
+            group by og.ID_ORDEN
+      ) h on h.ID_ORDEN = a.ID_ORDEN
+      where a.id_orden = 2177
+)
+select
+      'Orden: ' || t.ID_ORDEN
+      || ', fecha: ' || t.fechaejecucion
+      || ', acta: ' || t.ACTA
+      || ', tecnico: ' || t.nombre_contratista_persona
+      || ', atendio: ' || t.Persona_Atiende
+      || ', medidor: ' || t.Medidor
+      || ', lectura: ' || t.lectura
+      || ', ct: ' || t.mt
+      || ', mt: ' || t.ct
+      || ', mt: ' || t.ct
+      || ', otros: ' || t.ListagFaltante
+      as OBSERVACIONES
+FROM t]]>
+		</queryString>
+		<field name="OBSERVACIONES" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="Ds_Fotos_Impar" uuid="85eead66-d6ce-4e08-8c65-0a75a30f5779">
+		<parameter name="Ds06IdOrden" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[with t as (
+    select
+         RowNum as Id
+        ,gci.id_orden
+        ,a.id_cuestionario_instancia_soporte
+        ,a.id_cuestionario_instancia
+        ,a.id_soporte
+        ,b.id_tipo_soporte
+        ,c.codigo as Codigo_Tipo_Soporte
+        ,b.Nombre
+        ,b.peso
+        ,b.id_usuario_registro
+        ,case
+            when mod(ROWNUM,2) = 0 then (SELECT ruta_web FROM aire.gnl_rutas_archivo_servidor where id_ruta_archivo_servidor = 8) || a.id_soporte
+            else ''
+        end PathPar
+        ,case
+            when mod(ROWNUM,2) = 1 then (SELECT ruta_web FROM aire.gnl_rutas_archivo_servidor where id_ruta_archivo_servidor = 8) || a.id_soporte
+            else ''
+        end PathImPar
+      from aire.gnl_cuestionarios_instancia_soporte a
+      left join aire.gnl_cuestionarios_instancia gci on gci.id_cuestionario_instancia = a.id_cuestionario_instancia
+      left join aire.gnl_soportes b on a.id_soporte = b.id_soporte
+      left join aire.gnl_tipos_soporte c on b.id_tipo_soporte = c.id_tipo_soporte ---and c.codigo = 'SFCUE'
+    where gci.id_orden = $P{Ds06IdOrden} and c.codigo = 'SSCUE' --SFCUE,SSCUE
+)
+select
+    x.*
+from t x
+where x.PathImpar is not null
+order by x.id desc]]>
+		</queryString>
+		<field name="ID" class="java.math.BigDecimal"/>
+		<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+		<field name="ID_CUESTIONARIO_INSTANCIA_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="ID_CUESTIONARIO_INSTANCIA" class="java.math.BigDecimal"/>
+		<field name="ID_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="ID_TIPO_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="CODIGO_TIPO_SOPORTE" class="java.lang.String"/>
+		<field name="NOMBRE" class="java.lang.String"/>
+		<field name="PESO" class="java.lang.String"/>
+		<field name="ID_USUARIO_REGISTRO" class="java.math.BigDecimal"/>
+		<field name="PATHPAR" class="java.lang.String"/>
+		<field name="PATHIMPAR" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="Ds_Fotos_Par" uuid="6c405358-a53e-4129-9154-689435d63315">
+		<parameter name="Ds07IdOrden" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[with t as (
+    select
+         RowNum as Id
+        ,gci.id_orden
+        ,a.id_cuestionario_instancia_soporte
+        ,a.id_cuestionario_instancia
+        ,a.id_soporte
+        ,b.id_tipo_soporte
+        ,c.codigo as Codigo_Tipo_Soporte
+        ,b.Nombre
+        ,b.peso
+        ,b.id_usuario_registro
+        ,case
+            when mod(ROWNUM,2) = 0 then (SELECT ruta_web FROM aire.gnl_rutas_archivo_servidor where id_ruta_archivo_servidor = 8) || a.id_soporte
+            else ''
+        end PathPar2
+      from aire.gnl_cuestionarios_instancia_soporte a
+      left join aire.gnl_cuestionarios_instancia gci on gci.id_cuestionario_instancia = a.id_cuestionario_instancia
+      left join aire.gnl_soportes b on a.id_soporte = b.id_soporte
+      left join aire.gnl_tipos_soporte c on b.id_tipo_soporte = c.id_tipo_soporte ---and c.codigo = 'SFCUE'
+    where gci.id_orden = $P{Ds07IdOrden} and c.codigo = 'SSCUE' --SFCUE,SSCUE
+)
+select
+    y.*
+from t y
+where y.PathPar2 is not null
+order by y.id]]>
+		</queryString>
+		<field name="ID" class="java.math.BigDecimal"/>
+		<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+		<field name="ID_CUESTIONARIO_INSTANCIA_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="ID_CUESTIONARIO_INSTANCIA" class="java.math.BigDecimal"/>
+		<field name="ID_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="ID_TIPO_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="CODIGO_TIPO_SOPORTE" class="java.lang.String"/>
+		<field name="NOMBRE" class="java.lang.String"/>
+		<field name="PESO" class="java.lang.String"/>
+		<field name="ID_USUARIO_REGISTRO" class="java.math.BigDecimal"/>
+		<field name="PATHPAR2" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="Ds_Firmas_Impar" uuid="10e2b7b9-07ae-4da8-998e-fea83736ddd4">
+		<parameter name="Ds08IdOrden" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[with t as (
+    select
+         RowNum as Id
+        ,gci.id_orden
+        ,a.id_cuestionario_instancia_soporte
+        ,a.id_cuestionario_instancia
+        ,a.id_soporte
+        ,b.id_tipo_soporte
+        ,c.codigo as Codigo_Tipo_Soporte
+        ,b.Nombre
+        ,b.peso
+        ,b.id_usuario_registro
+        ,case
+            when mod(ROWNUM,2) = 0 then (SELECT ruta_web FROM aire.gnl_rutas_archivo_servidor where id_ruta_archivo_servidor = 8) || a.id_soporte
+            else ''
+        end PathPar
+        ,case
+            when mod(ROWNUM,2) = 1 then (SELECT ruta_web FROM aire.gnl_rutas_archivo_servidor where id_ruta_archivo_servidor = 8) || a.id_soporte
+            else ''
+        end PathImPar
+      from aire.gnl_cuestionarios_instancia_soporte a
+      left join aire.gnl_cuestionarios_instancia gci on gci.id_cuestionario_instancia = a.id_cuestionario_instancia
+      left join aire.gnl_soportes b on a.id_soporte = b.id_soporte
+      left join aire.gnl_tipos_soporte c on b.id_tipo_soporte = c.id_tipo_soporte ---and c.codigo = 'SFCUE'
+    where gci.id_orden = $P{Ds08IdOrden} and c.codigo = 'SFCUE' --SFCUE,SSCUE
+)
+select
+    x.*
+from t x
+where x.PathImpar is not null
+order by x.id]]>
+		</queryString>
+		<field name="ID" class="java.math.BigDecimal"/>
+		<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+		<field name="ID_CUESTIONARIO_INSTANCIA_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="ID_CUESTIONARIO_INSTANCIA" class="java.math.BigDecimal"/>
+		<field name="ID_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="ID_TIPO_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="CODIGO_TIPO_SOPORTE" class="java.lang.String"/>
+		<field name="NOMBRE" class="java.lang.String"/>
+		<field name="PESO" class="java.lang.String"/>
+		<field name="ID_USUARIO_REGISTRO" class="java.math.BigDecimal"/>
+		<field name="PATHPAR" class="java.lang.String"/>
+		<field name="PATHIMPAR" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="Ds_Firmas_Par" uuid="f58ba31c-1503-4349-bae7-309dadd1185e">
+		<parameter name="Ds09IdOrden" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[with t as (
+    select
+         RowNum as Id
+        ,gci.id_orden
+        ,a.id_cuestionario_instancia_soporte
+        ,a.id_cuestionario_instancia
+        ,a.id_soporte
+        ,b.id_tipo_soporte
+        ,c.codigo as Codigo_Tipo_Soporte
+        ,b.Nombre
+        ,b.peso
+        ,b.id_usuario_registro
+        ,case
+            when mod(ROWNUM,2) = 0 then (SELECT ruta_web FROM aire.gnl_rutas_archivo_servidor where id_ruta_archivo_servidor = 8) || a.id_soporte
+            else ''
+        end PathPar2
+      from aire.gnl_cuestionarios_instancia_soporte a
+      left join aire.gnl_cuestionarios_instancia gci on gci.id_cuestionario_instancia = a.id_cuestionario_instancia
+      left join aire.gnl_soportes b on a.id_soporte = b.id_soporte
+      left join aire.gnl_tipos_soporte c on b.id_tipo_soporte = c.id_tipo_soporte ---and c.codigo = 'SFCUE'
+    where gci.id_orden = $P{Ds09IdOrden} and c.codigo = 'SFCUE' --SFCUE,SSCUE
+)
+select
+    x.*
+from t x
+where x.PathPar2 is not null
+order by x.id]]>
+		</queryString>
+		<field name="ID" class="java.math.BigDecimal"/>
+		<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+		<field name="ID_CUESTIONARIO_INSTANCIA_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="ID_CUESTIONARIO_INSTANCIA" class="java.math.BigDecimal"/>
+		<field name="ID_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="ID_TIPO_SOPORTE" class="java.math.BigDecimal"/>
+		<field name="CODIGO_TIPO_SOPORTE" class="java.lang.String"/>
+		<field name="NOMBRE" class="java.lang.String"/>
+		<field name="PESO" class="java.lang.String"/>
+		<field name="ID_USUARIO_REGISTRO" class="java.math.BigDecimal"/>
+		<field name="PATHPAR2" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="prIdOrden" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select distinct
+      nvl(a.id_orden,-1) as id_orden
+     ,c.localidad
+     ,min(nvl(d.acta,'0')) over() as acta
+     ,(SELECT ruta_web FROM aire.gnl_rutas_archivo_servidor where id_ruta_archivo_servidor = 7) as Logo
+     ,'NOTA: En caso de detectarse una(s) irregularidad(es), esta acta se constituye en una prueba documental de lo encontrado en sus instalaciones, por lo cual procede como tal ante el cliente o usuario del servicio de energia eléctrica.' || chr(13) || chr(13) || 'Señor suscriptor, usuario y/o propietario, con la firma del presente acta queda notificado que el uso indebido del servicio, la adulteración o manipulación y la reconexión sin autorización por fuera del equipo de medida, se constituye en el delito de "defraudación de fluidos" (articulo 256 del codigo penal).' || chr(13) || chr(13) || 'IMPORTANTE: favor acercarse a la oficina comercial de la empresa para gestionar su reconexión. Si la suspensión o corte fueron imputables a usted, deberá eliminar su causa y pagar la deuda, los intereses por mora, los cargos de reconexión e instalación y todos los gastos que demande el cobro prejudicial o judicial en el evento que sea necesario.' as Nota01
+from aire.ord_ordenes a
+left join aire.gnl_clientes                     c  on c.id_cliente = a.id_cliente
+left join aire.ord_ordenes_gestion              d  on d.id_orden = a.id_orden
+where a.id_orden = $P{prIdOrden}]]>
+	</queryString>
+	<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<field name="ACTA" class="java.math.BigDecimal"/>
+	<field name="LOGO" class="java.lang.String"/>
+	<field name="NOTA01" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement style="FondoAzul" mode="Opaque" x="248" y="5" width="294" height="42" isPrintWhenDetailOverflows="true" uuid="6c799f91-ba82-447e-a521-24dfcf18fca1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ACTA DE SUSPENCIÓN
+CORTE Y RECONEXIÓN]]></text>
+			</staticText>
+			<image>
+				<reportElement x="18" y="5" width="139" height="53" uuid="60871d95-ec9f-47f6-9625-51ca9529fa7d"/>
+				<imageExpression><![CDATA[$F{LOGO}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="609" splitType="Stretch">
+			<textField>
+				<reportElement mode="Transparent" x="68" y="4" width="145" height="16" uuid="3ebfacfc-8d3f-4f79-aa10-c0c749f08d76"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+					<topPen lineWidth="0.5" lineColor="#999999"/>
+					<leftPen lineWidth="0.5" lineColor="#999999"/>
+					<bottomPen lineWidth="0.5" lineColor="#999999"/>
+					<rightPen lineWidth="0.5" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="276" y="4" width="146" height="16" uuid="cd50f6c3-32cd-40fb-93c5-e7f9ed3ac3f0"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+					<topPen lineWidth="0.5" lineColor="#999999"/>
+					<leftPen lineWidth="0.5" lineColor="#999999"/>
+					<bottomPen lineWidth="0.5" lineColor="#999999"/>
+					<rightPen lineWidth="0.5" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="TablaFieldsAzul" x="4" y="4" width="64" height="16" uuid="b6b4b331-7538-4e42-a809-925741307c5b"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+					<topPen lineWidth="0.5" lineColor="#999999"/>
+					<leftPen lineWidth="0.5" lineColor="#999999"/>
+					<bottomPen lineWidth="0.5" lineColor="#999999"/>
+					<rightPen lineWidth="0.5" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[ CIUDAD :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="TablaFieldsAzul" x="217" y="4" width="59" height="16" uuid="80320f28-1983-4c68-b153-1f4bd542f299"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+					<topPen lineWidth="0.5" lineColor="#999999"/>
+					<leftPen lineWidth="0.5" lineColor="#999999"/>
+					<bottomPen lineWidth="0.5" lineColor="#999999"/>
+					<rightPen lineWidth="0.5" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[ ACTA: ]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 1" x="4" y="23" width="564" height="32" uuid="d5fa1514-77e5-4982-ac63-65d7fc8e62e2"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="DsPrincipal" uuid="df0192dc-aca7-490f-9dab-a949a818834e">
+						<datasetParameter name="Ds01IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="75" uuid="5ef20d2a-cbc4-4625-a44e-1c5b27d3c498">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="75" height="17" uuid="81dc2ebe-5347-4587-a7d6-2d728280a864"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[NO. ORDEN]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="75" height="16" uuid="c229fd9c-80cf-45bd-9912-87087dee8310"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{NUMERO_ORDEN}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="65" uuid="b2209dd6-288c-4bd3-ab6d-8c75a4eec7bf">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="65" height="17" uuid="42ee237a-c9af-4cd8-8528-ead1479aee20"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[CODIGO O/S]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="65" height="16" uuid="4980e3df-2046-4370-9aad-33960ea63438"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{CODIGO_TIPO_ORDEN}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="184" uuid="006fd553-8e17-42d6-a87b-5b0f8c7f0810">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="184" height="17" uuid="f663baeb-43c4-4dd2-8e24-31c83457212b"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[TIPO O/S]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="184" height="16" uuid="1ecee618-44d3-41a9-9180-399ec9e7fbdc"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{DESCRIPCION_TIPO_ORDEN}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="85" uuid="95cd9538-016c-485f-b34e-1a8f8e0927f1">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="85" height="17" uuid="484edb5a-d792-4eb9-9cac-7d0023ff825b"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[NIC]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="85" height="16" uuid="e5b3f7fd-5290-48db-9590-733720248de4"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{NIC}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="155" uuid="97157615-5bae-4b8e-8656-d8de62b9e76f">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="155" height="17" uuid="f742d6af-6da4-4198-a248-89e9346c70dc"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[TIPO CLIENTE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="155" height="16" uuid="f6236c25-44d1-47b9-941c-bec82792be8a"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{TIPO_CLIENTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 2" positionType="Float" x="4" y="60" width="564" height="32" uuid="9de6cd30-2fae-4d70-8fa4-052c4a1e18df"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DsPrincipal" uuid="ce21ca15-2c62-4674-bd1b-f492641c9767">
+						<datasetParameter name="Ds01IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="164" uuid="20a22e21-12f6-4dda-8c1e-979d1e843279">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="164" height="17" uuid="262bc9ad-df92-42a3-8f05-51a9f9b900d0"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[USUARIO / CLIENTE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="164" height="16" uuid="d699948f-4bb5-41f8-a2ed-773c031193bf"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{NOMBRE_CLIENTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="144" uuid="57c58735-6510-4810-9ba9-0cb91f1fcc6b">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="144" height="17" uuid="29e8758f-ee97-467b-bcf3-cff717325975"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[DIRECCION]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="144" height="16" uuid="5f87fdee-0e56-4d92-b9c8-2ba249359eb3"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="123" uuid="9cadb931-de5a-4d93-89d3-a2820ae17cfd">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="123" height="17" uuid="06428f72-d311-4108-bbe3-e79b625a091c"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[BARRIO]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="123" height="16" uuid="03a202f0-02aa-4cc5-b355-24aa3a58fdbb"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{NOMBRE_BARRIO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="133" uuid="a728e2d5-f9ac-4f4b-bff6-7a0d003a6410">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="133" height="17" uuid="1ca969d0-ab34-4ba7-b580-12b87eefebb6"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[GEOLOCALIZACION]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="133" height="16" uuid="97ddeff1-aa2f-4b3e-a487-9c7abee84ffb"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{LATITUD_CLIENTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 3" positionType="Float" x="4" y="98" width="564" height="32" uuid="ac954aef-1738-4e9b-9e66-290b2a51e87a"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DsPrincipal" uuid="21a19692-5420-4e6a-8fa1-0caa3ef3f7ee">
+						<datasetParameter name="Ds01IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="60" uuid="a32ff092-4019-424f-bbb5-ed740251bf3c">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="60" height="17" uuid="5c3881cc-8917-454c-ae9e-87473fc57da3"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[M.T.]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="16" uuid="405b18f8-a808-4b9e-b143-e91403651aa7"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{MT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="97013977-03bf-4f16-aef1-424ee623b4bb">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="60" height="17" uuid="3ff80c1f-5252-4e9c-a5da-ede5edbc868f"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[C.T.]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="16" uuid="c0cda811-61d0-46d6-95ab-246c57065825"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{CT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="9842a537-d97e-4966-beae-57c9cb41adee">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="90" height="17" uuid="044c0fe5-9efc-4266-bc40-774cbb49d4ef"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[CARGA]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="16" uuid="e7a9f86f-a668-47da-9597-cbf1f9da2b99"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{CARGA_CONTRATADA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="154" uuid="9b30c890-243c-4ae5-84c2-0740f10099a9">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="154" height="17" uuid="764d9389-f737-4223-a21e-348d4517b963"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[TECNICO]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="154" height="16" uuid="bad5e102-ea98-40da-8267-e6a37caf3a0f"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{NOMBRE_CONTRATISTA_PERSONA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="d8465a26-145f-494d-ba62-93000d3f7662">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="80" height="17" uuid="cb8e46bb-8e71-4c6e-a9d8-ec5247e5d8d4"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[FECHA]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="80" height="16" uuid="e8e3b989-4b04-4f11-b911-9f9801afb734"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{FECHAEJECUCION}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="1cab2908-d947-49b2-91f0-4bc6c51bd8d1">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="60" height="17" uuid="0ed66360-7e86-4147-9a1a-b2392034f783"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[HORA INI]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField pattern="HH.mm">
+								<reportElement x="0" y="0" width="60" height="16" uuid="5c19522f-1ea1-4fb8-ab5d-9ffcf9191b61"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{FECHAINICIAL}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="1a59aefb-2927-4b3a-9013-776de836b32f">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="60" height="17" uuid="a1c2955d-c1e7-4d2e-8f1e-3dddce8b3212"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[HORA FIN]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField pattern="HH.mm">
+								<reportElement x="0" y="0" width="60" height="16" uuid="41be6a2f-bf3c-4cd4-bd7d-eb1b9d07d44c"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{FECHAFINAL}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField>
+				<reportElement positionType="Float" mode="Transparent" x="4" y="244" width="564" height="131" uuid="6af61b5f-56a8-4dad-9a3e-a63a37302f63"/>
+				<box topPadding="3" leftPadding="5" bottomPadding="3" rightPadding="3">
+					<pen lineWidth="0.5" lineColor="#999999"/>
+					<topPen lineWidth="0.5" lineColor="#999999"/>
+					<leftPen lineWidth="0.5" lineColor="#999999"/>
+					<bottomPen lineWidth="0.5" lineColor="#999999"/>
+					<rightPen lineWidth="0.5" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOTA01}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table 7" positionType="Float" x="4" y="397" width="564" height="16" uuid="ab205897-dc80-480f-a5ac-364db10ccae0"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DsControl" uuid="c17a9659-a1eb-494c-b41e-14f0612d8b8b">
+						<datasetParameter name="Ds04IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="514" uuid="51d5eac1-8137-4cfe-851e-c5be82b080b2">
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="514" height="16" uuid="7c84219f-803d-412b-bcf7-5650f68298dc"/>
+								<box leftPadding="3">
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Justified" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{PREGUNTA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="50" uuid="5c80202e-4ddb-4024-97ed-143923c461ac">
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="50" height="16" uuid="610803dc-bbc7-4f8d-b69e-49c6731ac1b8"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{RESPUESTA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement style="TablaFieldsAzul" positionType="Float" x="4" y="381" width="564" height="16" uuid="4b5b80e1-eed7-47eb-ad0c-567cb90e867a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CONTROL OPERACIONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="TablaFieldsAzul" positionType="Float" x="4" y="190" width="564" height="16" uuid="b651cd24-54d1-4974-9548-88dbad5315f2"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[SELLOS]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 5" positionType="Float" x="4" y="206" width="564" height="32" uuid="0517b32a-b4f9-4f18-b195-af3d8580729d"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DsSellos" uuid="5ea2e26a-ceca-4480-9bf8-bdb5b3e2580b">
+						<datasetParameter name="Ds03IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="70" uuid="c0ef3033-ef2c-4ad7-8789-ed75a73c4d25">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="70" height="17" uuid="93d3be2b-b552-4935-9466-de84666ff70b"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[ID ORDEN]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="70" height="16" uuid="550969db-2869-4164-b959-582493a87791"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ID_ORDEN}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="70" uuid="e3f1098b-c82a-49e3-87b3-83e0262ca4c2">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="70" height="17" uuid="b77dd732-860d-4505-900b-7d71144e17e8"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[SERIE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="70" height="16" uuid="3511656f-9887-4e2f-a6b5-83f6e432d9b0"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ID_SERIE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="0b20d56b-db3b-4733-8577-44b705649993">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="80" height="17" uuid="62dd629c-6a76-4a16-828d-448902b4870d"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[ID TIPO OP]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="80" height="16" uuid="51e9fc5c-49a7-4193-8522-6c137038d6d9"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ID_TIPO_OPERACION}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="c6ae5f8b-69d8-456c-bb5a-e23622f844df">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="140" height="17" uuid="2c815961-7ec4-4c88-96d2-b700f82f2502"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[TIPO OPERACION	]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="140" height="16" uuid="e8e118ec-86c6-40b9-9c33-7246d4c437ae"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="204" uuid="f2b9f061-c300-4092-a8d7-e429271811c9">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="204" height="17" uuid="ced306e5-2315-4cfc-bbb7-6a46cd66cdf8"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[OBSERVACIÓN]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="204" height="16" uuid="9ce96a5a-01f9-4b55-9231-11a5fdbed22c"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{OBSERVACION}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 7x" positionType="Float" x="4" y="419" width="564" height="32" uuid="c2b87515-d9fb-4b2d-99be-f04558d06636"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DsObservaciones" uuid="f40a3997-bd1d-4873-9eeb-768ef20a1f88">
+						<datasetParameter name="Ds05IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="564" uuid="6f20c69e-6b56-4163-8fd8-8d3e82c1a1bb">
+						<jr:columnHeader height="16" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="564" height="16" uuid="92cd7c8f-4369-463d-9799-e77db102b15d"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[OBSERVACIONES]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="564" height="16" uuid="70854c48-645e-4e94-b962-1080858a775f"/>
+								<box leftPadding="4">
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font size="9" isBold="false"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{OBSERVACIONES}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement style="TablaFieldsAzul" positionType="Float" x="4" y="538" width="564" height="16" uuid="9e785120-bdd8-4574-b53f-7caf694e2c5b"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[FIRMAS]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 9a" positionType="Float" x="4" y="558" width="270" height="35" uuid="a1770bff-30f4-4506-a0f6-a5e67e00ee35"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Ds_Firmas_Impar" uuid="20cc1875-47cc-4cad-a401-736bf99dc099">
+						<datasetParameter name="Ds08IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="270" uuid="4a82dff3-fbdd-4103-9719-2a6d500b667e">
+						<jr:detailCell height="270" rowSpan="1">
+							<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+								<reportElement positionType="Float" x="0" y="0" width="270" height="250" uuid="6896d493-1d5b-46ab-a894-f5a47a14f7d9"/>
+								<imageExpression><![CDATA[$F{PATHIMPAR}]]></imageExpression>
+							</image>
+							<textField>
+								<reportElement x="0" y="250" width="270" height="20" uuid="616b8e00-2a6c-48ed-b935-ec7c348b17b2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="12" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ID_SOPORTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 9b" positionType="Float" x="298" y="558" width="270" height="35" uuid="1b99b40c-cece-4566-a141-4dfe225fed26"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Ds_Firmas_Par" uuid="9413ef57-4cff-4660-b09f-51dd4933f039">
+						<datasetParameter name="Ds09IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="270" uuid="2d3a04e3-a160-4b30-9eab-96c88e98d981">
+						<jr:detailCell height="270" rowSpan="1">
+							<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+								<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="270" height="250" forecolor="#FF6666" uuid="ccec8d53-4d99-4151-b1e2-64f001642357"/>
+								<imageExpression><![CDATA[$F{PATHPAR2}]]></imageExpression>
+							</image>
+							<textField>
+								<reportElement positionType="Float" x="0" y="250" width="270" height="20" uuid="ebfebd82-ed85-4ee1-9b15-4726dc747d54"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="12" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ID_SOPORTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 8b" positionType="Float" x="298" y="485" width="270" height="35" uuid="29d5e86e-ab78-47a4-b5a1-5e9b93e0a0bb"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Ds_Fotos_Par" uuid="7249b769-f7ed-4197-86d2-40ad00494503">
+						<datasetParameter name="Ds07IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="270" uuid="89ab5a1b-b730-4a5a-a684-e12acd15cb87">
+						<jr:detailCell height="270" rowSpan="1">
+							<image scaleImage="RealSize" hAlign="Center" vAlign="Middle">
+								<reportElement mode="Opaque" x="0" y="0" width="270" height="250" forecolor="#FF6666" uuid="3b847ada-b55c-4086-bbb6-a3aca94c5760"/>
+								<imageExpression><![CDATA[$F{PATHPAR2}]]></imageExpression>
+							</image>
+							<textField>
+								<reportElement x="0" y="250" width="270" height="20" uuid="ae9eceac-35ba-4d75-849c-cc187a56f8d1"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="12" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ID_SOPORTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 8a" positionType="Float" x="4" y="485" width="270" height="35" uuid="dc05173b-7f62-4fe3-84f0-fac71652fa5c"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Ds_Fotos_Impar" uuid="73f898c4-653a-4ae7-a4d3-202d9eb3f58f">
+						<datasetParameter name="Ds06IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="270" uuid="ff4de573-f4d1-4310-b5a0-8c8b4866bc7a">
+						<jr:detailCell height="270" rowSpan="1">
+							<image scaleImage="RealSize" hAlign="Center" vAlign="Middle">
+								<reportElement positionType="Float" x="0" y="0" width="270" height="250" uuid="8dabc78d-373d-4fa7-89bf-f5002e66d7c8"/>
+								<imageExpression><![CDATA[$F{PATHIMPAR}]]></imageExpression>
+							</image>
+							<textField>
+								<reportElement x="0" y="250" width="270" height="20" uuid="6094657d-950a-4667-9b64-f809bb00f7ab"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="12" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ID_SOPORTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement style="TablaFieldsAzul" positionType="Float" x="4" y="465" width="564" height="16" uuid="48ac1350-4dbe-4c68-8154-feadc4828426"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[SOPORTE FOTOGRAFICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="TablaFieldsAzul" positionType="Float" x="4" y="136" width="400" height="16" uuid="a7d9d429-6523-453c-be87-f46e2622415a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL MEDIDOR ENCONTRADO EN EL INMUEBLE]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 4x" positionType="Float" x="4" y="152" width="400" height="32" uuid="5f8ad205-759b-463e-9ebc-1e747db9e394"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DsDatosMedidos" uuid="db8073f5-d366-4162-afc3-e9d100779cef">
+						<datasetParameter name="Ds02IdOrden">
+							<datasetParameterExpression><![CDATA[$P{prIdOrden}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="100" uuid="0ddf44db-5a99-417e-8358-69431a53615d">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="100" height="17" uuid="10629279-205f-4121-9a7b-09c57ed57a10"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[ID]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="16" uuid="d6d11c8e-6015-43e8-9219-8ebc7a85e54f"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ID_ORDEN}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="67210bb7-50d5-44df-b58c-f85d2c9bbee2">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="100" height="17" uuid="669b3313-4e45-49e1-8f72-bec6795b34e8"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[ORDEN]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="16" uuid="5edeaac9-71b4-420a-bfe2-0be8e84370ec"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{NUMERO_ORDEN}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="e0f88784-f9ca-45cc-96f4-9a43e35d22f2">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="100" height="17" uuid="896d6f79-6339-40cc-8d85-0271e4629dba"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[MEDIDOR]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="16" uuid="6169962c-ef36-4e3d-af7d-fcfac08cdce2"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{NUMERO_MEDIDOR}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="f6effc1f-9308-4058-b580-ee01fcc46b5a">
+						<jr:columnHeader height="17" rowSpan="1">
+							<staticText>
+								<reportElement style="TablaFieldsAzul" x="0" y="0" width="100" height="17" uuid="410c0ca1-189d-4010-b9f3-e13327fc0090"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[LECTURA]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="16" uuid="27ebc334-23cb-4f46-a6c2-e7bacb6c52c2"/>
+								<box>
+									<pen lineWidth="0.5" lineColor="#999999"/>
+									<topPen lineWidth="0.5" lineColor="#999999"/>
+									<leftPen lineWidth="0.5" lineColor="#999999"/>
+									<bottomPen lineWidth="0.5" lineColor="#999999"/>
+									<rightPen lineWidth="0.5" lineColor="#999999"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{LECTURA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<break>
+				<reportElement x="0" y="461" width="100" height="1" uuid="f08f6379-7eae-4f19-8ebb-f3d9a46ef200"/>
+			</break>
+			<break>
+				<reportElement x="0" y="528" width="100" height="1" uuid="e8abf375-1554-4942-9d53-7445d9386bb9"/>
+			</break>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="29" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

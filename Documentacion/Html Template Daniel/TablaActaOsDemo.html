@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container{
+            width: 100%;
+            box-sizing: border-box;            
+            heigth:1122px; 
+            max-width: 790px;             
+            /*border: 1px solid #ccc;*/
+            background-color: #FFFFFF; 
+            font-family: Arial Black, Arial, sans-serif;             
+        }
+        
+        .colorBlue {
+            background-color: #000074;
+            color: white;
+            font-weight: bold;
+        }
+        
+        td {            
+            word-break: break-all;            
+            font-size: 10px;            
+        }
+        table{
+            border-collapse:collapse; 
+            border-spacing:0;
+            width: 100%;
+            text-align: center;  
+            box-sizing: border-box; /* incluir padding en el ancho */            
+        }
+        tr{
+            padding: 0px; 
+            margin: 0px;
+        }
+        body{
+            margin: 4px 40px;
+            padding: 0px;
+        }
+    </style>    
+</head>
+
+<body>
+    <div class="container">        
+        <table style="border: 0px solid white;">
+            <tr style="border: 0px solid white;">
+                <td width="4%"></td>
+                <td width="42%">
+                    <img src="D:\tmp\logo2.png" style="Display: block;margin: auto;">
+                </td>
+                <td width="4%"></td>
+                <td width="50%" style="border-top: solid 16px white;border-bottom: solid 16px white;">
+                    <p style="font-size: 16px;padding: 4px 0px 0px 0px;margin:0px 0px 0px 0px;background-color: #000074;color: white;font-stretch: ultra-expanded;">ACTA DE SUSPENSION</p>
+                    <p style="font-size: 12px;padding: 0px 0px 4px 0px;margin:0px 0px 0px 0px;background-color: #000074;color: white;">CORTE Y RECONEXION</p>
+                </td>
+            </tr>
+        </table>        
+        <table>
+            <tr>
+                <td class="colorBlue" style="border: 1px solid #000074; width: 10%;">CIUDAD</td>
+                <td style="border: 1px solid #000074; width: 30%;">%Localidad%</td>
+                <td style="width: 20%;font-size: 14px;font-weight: bold;text-align: center;">Acta No.</td>
+                <td style="width: 40%;font-size: 18px;font-weight: bold;">%Acta%</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table" style="border: 1px solid black;">      
+            <tr>
+                <td class="colorBlue" style="black; width: 16%;">No. ORDEN</td>
+                <td class="colorBlue" style="black; width: 12%;">CÓDIGO O/S</td>
+                <td class="colorBlue" style="black; width: 37%;">TIPO O/S</td>
+                <td class="colorBlue" style="black; width: 15%;">NIC</td>
+                <td class="colorBlue" style="black; width: 20%;">TIPO CLIENTE</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;">%id_orden%</td>
+                <td style="border: 1px solid black;">%codigo_tipo_orden%</td>
+                <td style="border: 1px solid black;">%descripcion_tipo_orden%</td>
+                <td style="border: 1px solid black;">%nic%</td>
+                <td style="border: 1px solid black;"></td>
+            </tr>
+        </table>
+        <br>
+        <table class="table" style="border: 1px solid black;">
+            <tr>
+                <td class="colorBlue" style="black; width: 16%;">USUARIO/CLIENTE</td>
+                <td class="colorBlue" style="black; width: 16%;">DIRECCION</td>
+                <td class="colorBlue" style="black; width: 16%;">BARRIO</td>
+                <td class="colorBlue" style="black; width: 16%;">GEOLOCALIZACION</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;">%Nombre_Cliente%</td>
+                <td style="border: 1px solid black;">%Direccion%</td>
+                <td style="border: 1px solid black;">%Localidad%</td>
+                <td style="border: 1px solid black;">%Georreferencia%</td>
+            </tr>        
+        </table>
+        <br>
+        <table class="table" style="border: 1px solid black;">
+        <tr>
+            <td class="colorBlue" style="black; width: 9%;">M.T.</td>
+            <td class="colorBlue" style="black; width: 9%;">C.T.</td>
+            <td class="colorBlue" style="black; width: 11%;">CARGA CONTRATADA</td>
+            <td class="colorBlue" style="black; width: 44%;">TECNICO</td>
+            <td class="colorBlue" style="black; width: 9%;">FECHA</td>
+            <td class="colorBlue" style="black; width: 9%;">HORA INICIO</td>
+            <td class="colorBlue" style="black; width: 9%;">HORA FIN</td>
+        </tr>
+
+        <tr>
+            <td style="border: 1px solid black;">%mt%</td>
+            <td style="border: 1px solid black;">%ct%</td>
+            <td style="border: 1px solid black;">%%</td>
+            <td style="border: 1px solid black;">%nombre_contratista%</td>
+            <td style="border: 1px solid black;">%fecha_ejecucion%</td>
+            <td style="border: 1px solid black;">%fecha_inicio_ejecucion%</td>
+            <td style="border: 1px solid black;">%fecha_fin_ejecucion%</td>
+        </tr>
+        
+    </table>
+        <br />
+
+        <p style="text-align: justify;">
+            NOTA: En caso de detectarse una(s) irregularidad(es), esta acta se constituye en una prueba documental de lo encontrado en sus instalaciones, por lo cual procede como
+            tal ante el cliente o usuario del servicio de energia eléctrica.
+            Señor suscriptor, usuario y/o propietario, con la firma del presente acta queda notificado que el uso indebido del servicio, la adulteración o manipulación y la reconexión sin
+            autorización por fuera del equipo de medida, se constituye en el delito de 'defraudación de fluidos' (articulo 256 del codigo penal).
+            IMPORTANTE: favor acercarse a la oficina comercial de la empresa para gestionar su reconexión. Si la suspensión o corte fueron imputables a usted, deberá eliminar su
+            causa y pagar la deuda, los intereses por mora, los cargos de reconexión e instalación y todos los gastos que demande el cobro prejudicial o judicial en el evento que sea
+            necesario.
+            <br><br>
+            Lorem ipsum dolor sit amet consectetur adipiscing elit dictum neque nunc, orci ut morbi fringilla metus faucibus bibendum nascetur erat parturient, ad dis donec ridiculus nam purus dignissim nullam per. Porta faucibus gravida nulla cum himenaeos molestie taciti torquent, mi ad magna fringilla suspendisse facilisis nam, parturient mus nibh non neque pharetra fermentum. Mauris sodales felis senectus consequat posuere risus mattis, imperdiet ridiculus est facilisis suscipit venenatis, varius libero turpis purus aliquet semper.
+            <br><br>
+            Senectus dignissim nullam sapien arcu malesuada mi nascetur, eu cursus vel ornare viverra facilisi sodales lacinia, purus sociis sed taciti penatibus tellus. Ultrices blandit porta neque quisque malesuada condimentum pharetra id, volutpat a pretium vestibulum nisi inceptos primis eleifend, velit sollicitudin commodo non ridiculus congue consequat. Eleifend lobortis per proin id ac, a montes suscipit natoque facilisis, imperdiet aliquam phasellus quam. Vivamus mattis quam aptent tincidunt porttitor interdum tempor fermentum vulputate cubilia, facilisis potenti nec integer mus in suscipit molestie scelerisque, lacus mauris massa phasellus etiam orci dapibus sem felis.
+            <br><br>
+            Arcu ultricies aliquet natoque sem feugiat eleifend molestie placerat diam euismod taciti nullam himenaeos ligula mattis vivamus nostra, laoreet proin porttitor nisi velit facilisi urna semper volutpat eget pretium duis mus nec ut. Aliquet condimentum torquent ad sem eget sodales consequat et pretium, enim nisi augue elementum fermentum ante nostra nisl. Blandit venenatis eget vulputate pellentesque nam habitant cubilia fusce porttitor senectus, ultrices molestie quisque at dis gravida est ornare varius urna nascetur, proin id placerat tellus ac malesuada faucibus fringilla cum.
+            <br><br>
+            Nam phasellus ligula habitant sociosqu conubia vitae magnis, dictum sociis mattis est nascetur purus laoreet metus, praesent diam pharetra vel quam vehicula. Facilisi porttitor imperdiet pretium cum fames praesent ligula condimentum posuere nam ridiculus, netus curae bibendum leo facilisis risus per ac pharetra taciti. Velit mauris accumsan cubilia facilisi netus conubia platea imperdiet, senectus eu quam rhoncus condimentum sociosqu iaculis laoreet sodales, consequat lacinia dictumst odio praesent risus tincidunt. Eu orci tempor lacus odio magnis curabitur, metus cubilia in pharetra.
+            <br><br>
+            Suspendisse mattis tristique egestas cubilia felis arcu posuere gravida, magna quisque volutpat vitae urna fringilla pulvinar ligula eu, dictum lacinia diam nunc et a tempus. Massa curabitur habitasse risus volutpat praesent nisl sapien auctor mus natoque libero, fringilla justo purus iaculis penatibus mollis donec hendrerit dictum lacinia. Quisque ligula gravida curabitur dapibus pulvinar nisl nascetur at commodo, viverra dui interdum accumsan odio arcu torquent placerat, sociosqu dictum augue et morbi ut habitasse tempus.
+            <br><br>
+            Primis porta laoreet hendrerit faucibus dis fames dui ornare eros, molestie venenatis nibh suspendisse neque sodales bibendum feugiat, metus ligula augue himenaeos integer cursus ullamcorper tempor. Condimentum dictum placerat enim nunc facilisi fames, varius risus natoque nullam faucibus taciti, cras urna quisque per magnis. Diam lacus sem dictumst rhoncus purus morbi ultrices rutrum potenti, feugiat facilisi libero eros leo fusce integer tincidunt, molestie condimentum eu senectus facilisis enim nec imperdiet. Tempor fames diam orci ut mus suspendisse, auctor eu porta venenatis condimentum nascetur, leo augue posuere sollicitudin velit lectus, nisi euismod sociis malesuada per.
+        </p>
+        <p style="position:absolute;bottom:5px;">Pagina 2 de 2</p>
+    </div>
+    <script>                  
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("myId").innerHTML = "asdfdsafasd";
+          });
+    </script>
+
+</body>
+</html>

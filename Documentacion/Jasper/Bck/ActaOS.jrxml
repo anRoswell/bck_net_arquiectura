@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ActaOS" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2b9e1c56-30fb-43d5-8ca2-25816b3faeb7">
+	<queryString language="SQL">
+		<![CDATA[select 
+      NVL(a.id_orden,-1) as id_orden
+     ,NVL(b.codigo_tipo_orden,-1) as codigo_tipo_orden
+     ,NVL(b.descripcion,-1) as descripcion_tipo_orden
+     ,NVL(c.nic,-1) as nic
+     ,c.Localidad
+     ,c.Nombre_Cliente
+     ,c.Direccion
+     --,c.georreferencia
+     ,to_number(json_value(nvl(c.georreferencia,'{"longitud":NULL,"latitud":NULL}'), '$.longitud'), '9999.99999999') longitud_cliente
+     ,to_number(json_value(nvl(c.georreferencia,'{"longitud":NULL,"latitud":NULL}'), '$.latitud'), '9999.99999999') latitud_cliente
+     ,SUM(d.mt) OVER() mt
+     ,SUM(d.ct) OVER() ct
+     ,e.nombre_contratista
+     ,d.fecha_ejecucion
+     ,d.fecha_inicio_ejecucion
+     ,d.fecha_fin_ejecucion
+     ,MAX(NVL(d.Acta,'0')) OVER() AS Acta
+from aire.ord_ordenes a                    
+left join aire.ord_tipos_orden              b on b.id_tipo_orden = a.id_tipo_orden
+left join aire.gnl_clientes                 c on c.id_cliente = a.id_cliente
+left join aire.ord_ordenes_gestion          d on d.id_orden = a.id_orden
+left join aire.v_ctn_contratistas_brigada   e on e.id_contratista_persona = d.id_contratista_persona
+where a.id_orden = 93 and rownum = 1]]>
+	</queryString>
+	<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+	<field name="CODIGO_TIPO_ORDEN" class="java.lang.String"/>
+	<field name="DESCRIPCION_TIPO_ORDEN" class="java.lang.String"/>
+	<field name="NIC" class="java.lang.String"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<field name="NOMBRE_CLIENTE" class="java.lang.String"/>
+	<field name="DIRECCION" class="java.lang.String"/>
+	<field name="LONGITUD_CLIENTE" class="java.math.BigDecimal"/>
+	<field name="LATITUD_CLIENTE" class="java.math.BigDecimal"/>
+	<field name="MT" class="java.math.BigDecimal"/>
+	<field name="CT" class="java.math.BigDecimal"/>
+	<field name="NOMBRE_CONTRATISTA" class="java.lang.String"/>
+	<field name="FECHA_EJECUCION" class="java.sql.Timestamp"/>
+	<field name="FECHA_INICIO_EJECUCION" class="java.sql.Timestamp"/>
+	<field name="FECHA_FIN_EJECUCION" class="java.sql.Timestamp"/>
+	<field name="ACTA" class="java.math.BigDecimal"/>
+	<group name="CODIGO_TIPO_ORDEN">
+		<groupExpression><![CDATA[$F{CODIGO_TIPO_ORDEN}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

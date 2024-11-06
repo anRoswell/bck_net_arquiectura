@@ -1,0 +1,13 @@
+[Unit]
+Description=Docker Compose App Op360°
+Requires=docker.service
+After=docker.service
+
+[Service]
+WorkingDirectory=/home/zabbix
+ExecStart=/usr/local/bin/docker-compose up -d
+ExecStop=/usr/local/bin/docker-compose down
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Api</name>
+    </assembly>
+    <members>
+        <member name="M:Api.Controllers.SecurityController.Post(Core.DTOs.SecurityDto)">
+            <summary>
+            Add users security for API
+            </summary>
+            <param name="securityDto">SecurityDto JSON</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.Controllers.TokenController.Authentication(Core.Entities.UserLogin)">
+            <summary>
+            Generate Token
+            </summary>
+            <param name="login">UserLogin JSON</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,20 @@
+Comentarios:
+
+
+Id_Orden: 29821
+Orden: -41741
+Cuenta: 1116203
+Zona: MAGDALENA NORTE_41
+Municipio: SANTA MARTA
+Barrio: URB LIBANO 2000
+Tipo Suspensión: E - ELITE
+
+
+observacion numero uno A, con foto A 
+observacion numero dos B, con foto B, accion vs
+observacion numero tres C, con foto C, accion vm
+observacion numero cuatro D, con foto D, accion RCS
+observacion numero cinco E, con foto E, accion RI
+observacion numero seis F, con foto F, accion MDV
+observación numero siete, material instalado.
+--se agrega foto G

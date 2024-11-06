@@ -1,0 +1,373 @@
+En apex ya hay un desarrollo. Se tendria que usar el sistema de logueo de apex.
+
+Path:
+----------------------------------------------------------
+Api/Op360Seguridad/ConsultarUsuariosPerfiles
+
+
+Actividades:
+----------------------------------------------------------
+
+Reunion inicial con equipo.
+
+Reunion con alfonso para aclarar concepto del menu y su relacion con el app de apex.
+
+Reunion con Frainer Simarra para mirar algunas dudas de la plantilla de net core y angular. Tambien con jorge sierra y alfonso para aclarar dudas varias.
+
+Reunion nueva con frainer, alfonso y antonio para tratar el tema del menu y la autenticacion a op360 desde apex.
+
+Se realiza laboratorio en net.core para ver como se consume una función de oracle que recibe un parametro y retorna una blob con un texto en formato JSON, finalmente se deserializa en un modelo. falta convertirlo en un end point
+
+Se realiza laboratorio en net.core para ver como se consume una proce que recibe un parametro y retorna una blob con un texto en formato JSON, finalmente se deserializa en un modelo. falta convertirlo en un end point.
+
+
+----------------------------------------------------------
+Listado de Ordenes Trabajo
+
+Consultar o listar para la web
+listar para la movil
+actualizar 
+
+
+Actividades:21/12/2023
+----------------------------------------------------------
+Se realiza reunion en la mañana con frainer y alfonso para 
+discutir temas de endpoint que alfonso sugiere realicemos. 
+
+se realiza laboratorio con endpoint unico
+
+se realiza end point que retorne las ordenes de trabajo
+
+
+Actividades:22/12/2023
+----------------------------------------------------------
+Se quita el campo ID_EQUIPO_TRABAJO al endpoint de listado de ordenes y se publica en git
+
+
+Actividades:26/12/2023
+----------------------------------------------------------
+reunion normal
+reunion con alfonso
+09:00 repaso jwt 
+se realiza cascaron EP Actualizar Ordenes
+se realiza cascaron EP Consultar Ordenes
+
+Actividades:27/12/2023
+----------------------------------------------------------
+reunion normal
+integrar sp 
+
+Actividades:28/12/2023
+----------------------------------------------------------
+reunion normal
+reunion con inge alex fonseca solucionar tema array string
+se realizan pruebas 
+Repase la parte de guardado de archivos y generacion de excel
+Se creo los siguientes EndPoint:
+	Movil - Listar Ordenes 
+		https://localhost:44326/api/Op360mOrdenes/ObtenerOrdenesTrabajoMovil
+	Movil - Actualizar Ordenes
+	Movil - Consultar Ordenes
+	Otros - Save Files
+	Web - Exportar Ordenes Excel
+
+
+Actividades:29/12/2023
+----------------------------------------------------------
+reunion normal
+reunion con carlos cenhaward temas varios template backend
+Ep Actualizar Orden
+Reunion 2 a 4 con oscar, alex, alfonso y 
+
+
+Actividades:03/01/2024
+----------------------------------------------------------
+reunion normal scrum
+Atender ticket  90733 de area limpia de 8:30 a 10 am
+laboratorio para enviar clob y recibir clob de 10 a 11:30
+reunion con carlos, alfonso y antonio para estandarizar procedimientos almacenados.
+se crea enpoint https://localhost:44326/api/Op360Incidencias/GestionIncidencia
+
+Actividades:04/01/2024
+----------------------------------------------------------
+reunion normal scrum.
+reunion con el inge Oscar se definen los posibles EndPoints que pueden salir.
+reunion con el inge alex y carlos rodriguez para verificar el proceso de storedprocedure.
+reunion con el inge alfonso para probar el logueo.
+se migra la parte dependiente de sql server.
+
+
+Actividades:05/01/2024
+----------------------------------------------------------
+reunion normal scrum.
+Se crea word con todos las definiciones de endpoints por hacer.
+Se configura el EndPoint api/Op360Files/SaveFiles para que obtenga el path de la tabla aire.gnl_rutas_archivo_servidor;
+
+
+Actividades:09/01/2024
+----------------------------------------------------------
+Reunion normal scrum.
+Mirar lo de savefiles en linux se mejora para grabar en tabla gnl_soportes
+Capacitacion con inge antonio
+reunion con oscar mostrarle los endpoints
+
+
+Actividades:10/01/2024
+----------------------------------------------------------
+reunion normal scrum.
+reunion con alfonso para verificar guardado de archivos
+end point parametros iniciales
+end point consultar cliente por nic nis
+reunion con carmen socializar end point creacion orden y cargue masivo
+reunion con shirley para orientacion cargue archivo de excel.
+
+
+Actividades:11/01/2024
+----------------------------------------------------------
+reunion normal scrum.
+Se implementan las recomendaciones dadas por el inge Antonio al SP Oracle
+Reunion con carmen y antonio para temas varios.
+Reunion con el inge Jaime y Alex
+
+
+Actividades:12/01/2024
+----------------------------------------------------------
+reunion normal scrum.
+reunion con carmen y alex.
+reunion con ingeniero daniel, capacitacion con contexto y descripcion del endpoint a desarrollar. se explico las politicas de oracle y lo descrito por shirley
+
+al Api/Op360Ordenes/ObtenerOrdenesTrabajoOficinaCentral se le agrego el total de asignadas y no asignadas
+
+se creo nuevo enp point con la infor consolidada por varios campos.
+Api/Op360Ordenes/ObtenerOrdenesTrabajoAgrupadasOficinaCentral
+
+se inicio a trabajar en el end point de asignacion y asignacion de contratista, avance un 60%
+Api/Op360Ordenes/OrdenesGestionarContratistas
+
+
+Actividades:15/01/2024
+----------------------------------------------------------
+reunion normal scrum.
+reuniones varias con el inge oscar, con carmen.
+reunion con daniel para ver avance, terminamos la parte de crear un registro de una orden.
+al "Ep: Listar órdenes de trabajo para Of Central Aire" se le implemento la paginación
+se continua con el "Ep: Asignar/Desasignar contratistas"
+
+
+Actividades:16/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-reuniones varias con carmen, jaime. -- nuevo usuario frontend git
+*-Api/Op360Ordenes/ObtenerOrdenesTrabajoOficinaCentral: se corrige bug en la api 
+*-Api/Op360Ordenes/ObtenerOrdenesTrabajoAgrupadasOficinaCentral.: se cambia el resultado y se deja el contratista y las zonas que tiene ese contratista.
+*-Se crean 2 nuevos end point para la igne carmen:
+	--Api/Op360Ordenes/ObtenerArchivosInstancia
+	--Api/Op360Ordenes/ObtenerArchivosInstanciaDetalle
+*-Api/Op360Ordenes/OrdenesGestionarContratistas:(asignar y desasignar) se encuentran varios bugs que se estan corrigiendo.
+
+
+
+Actividades:17/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-Ep: Listar o consultar orden de trabajo por Id: se crea este endpoint para la inge carmen.
+*-Ep: Asignar/Desasignar contratistas: se cambia el parametro de entrada id_contratista por identificacion y se corrigen bugs 
+*-Ep: Listado de Ordenes para DashBoard Aire: se crea el end point.
+*-Ep: Exportar Ordenes de Trabajo Oficina Central Excel: se crea este nuevo endpoint.
+*-Reunion con el inge alexander fonseca para revisar la app de pruebas de powercore.
+*-reunion con daniel
+
+
+
+Actividades:18/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-Ep: https://localhost:44326/api/Op360Ordenes/CrearOrden: se termina de realizar con ayuda del inge Daniel
+*-Ep: https://localhost:44326/api/Op360Ordenes/ObtenerArchivosInstancia: se agrega el campo de descarga del archivo
+
+
+
+Actividades:19/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-reunion con carmen y jaime para revisar varios en points y definir otros que se necesitan
+
+
+Actividades:22/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-realizar el proceso de decodificar el codigo del usuario y almacenarlo en los claims de jwt y almacenar tambien la identificacion
+	*-aire.pkg_g_seguridad.prc_validar_token_informacion
+
+*-reunirme con carmen o jaime para entregar los end points pendientes
+*-reunirme con daniel para ver como va el avance de los reportes en pdf
+*-migrar el codigo de los sp de paquetes personales al oficial
+
+
+*-Api GetParametrosInicialesContratistas: 
+	-quitar el filtro de identificacion y tomar este valor de la sesion. 
+	-validar si no existe nada retornar el error.
+	-devolver tambien el listado de zonas
+*- Api ObtenerOrdenesTrabajoContratistasBrigadas:
+	-quitar el filtro de identificacion y tomar este valor de la sesion.
+	-agregar filtro por brigada tomando la identificacion de la brigada.
+*- Api OrdenesGestionarBrigadas:
+	-quitar el filtro de identificacicon y tomar este valor de la sesion.
+
+
+Actividades:24/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-realizar el proceso de decodificar el codigo del usuario y almacenarlo en los claims de jwt y almacenar tambien la identificacion
+	*-aire.pkg_g_seguridad.prc_validar_token_informacion
+*-reunirme con daniel para ver como va el avance de los reportes en pdf
+*-migrar el codigo de los sp de paquetes personales al oficial
+
+*-se realizaron cambios en los endpoints de asignacion / desasignacion de contratistas y tambien de brigadas. 
+*-tambien se modifico la respuesta del error relacionando un código único del mismo.
+
+*-reunion con alfonso y alex fonseca para ajustar la plantilla en la parte de los diferentes escenarios.
+
+
+Actividades:25/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-se termina de definir bien el tema de seguridad para los endpoint
+	modifique un query en el sp aire.pkg_g_seguridad.prc_validar_token_informacion
+*-capacitación con el inge alexander para el tema de la nueva plantilla net core.
+
+
+Actividades:26/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-reunion con el inge oscar para definir el tema de la seguridad que se implemento por token jwt de la api.
+*-se añade a la reunion al inge antonio y se define que cuando la api expire la seguridad se devuelve a la url de apex.
+	*-a la api en la parte de logueo se recibe nuevo campo con la url origen de apex.
+*-reunion con el inge daniel orientación migración template.
+*-reunion con inge Carmen para realizar las siguientes correcciones:
+	---En los parametros iniciales de area central los contratistas hay que filtrar solo los de area central.
+	---En los parametros iniciales devovler un campo llammado "url_plantilla" para la descarga del archivo de excel del cargue masivo.
+
+*-reunion con el inge Antonio donde me explico que se necesita lo siguiene
+	---Enviar la notifición al tecnico cuando se le asigne una orden
+	---modulo de filtros. 
+		--EP Parametros Iniciales
+		--Ep Crud:
+			--creacion--PUT
+			--actualizacion--POST
+			--eliminacion--POST
+			--consulta--GET
+
+
+Actividades:29/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-reunion con inge oscar e inge carmen. se añade nuevo parametro de entrada id_estado_orden y se ajusta la api:
+	-/api/Op360Ordenes/GetParametrosInicialesAreaCentral
+*-se crea el end point Api/Op360Filtros/GetParametrosIniciales
+*-reunion con inge alfonso para verificar ambientes desarrollo y qa
+*-se crea nuevo endpoint con resumen de los datos de la tabla ordenes para ser cargados en excel.: 
+	-/api/Op360Ordenes/ObtenerResumenGlobalOrdenes
+
+
+
+Actividades:30/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+--[ok]-cuando se asignan ordenes a tecnicos enviar la notificacion
+--[ok]-mejorar la seguridad -- Habilitar JWT
+--[ok]-reunion con inge oscar para verificar jwt
+--[ok]-al ep de ordenes para contratistas agregar el parametro de id_estado_orden
+--[ok]-reunion con alfonso y los compañeros
+
+
+Actividades:31/01/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+--migrar sp oracle y se realizan pruebas
+--se cambia el nombre a el controlador de Op360Ordenes a Op360ScrWeb
+--se añade filtro a los datos para que retorne solo la data de contratistas de scr
+--reunion con el inge carlos rodriguez se restaura la funcionalidad de cors.
+
+
+Actividades:01/02/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-se implementa el logueo en swagger y me reuni con carlos rodriguez para afinar la ultima parte
+*-se realizan algunas pruebas en qa
+*-se inicia a realizar el log de traza de las ordenes.
+*-reunion con inge antonio explicacion traza ordenes y puntos mapa.
+
+
+Actividades:13/02/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*- Capacitacion JasperReports
+*- Se instala Jasper
+*- El inge antonio me colaboro con la identificacion de los dispositivos a enviarles notificacion cuando se realizan 
+desasignaciones masivas.
+*- En el cargue masivo se añade la deteccion de filas en blanco y no se cargan
+*- En el cargue masivo se corrige el tiempo de carga donde se toma el tiempo inicial y final en gmt universal para que no muestre el tiempo de 5horas.
+*- Reunion con Carmen e Inge Oscar para solicitud nuevo end point cierre de ordenes desde la web:
+		Cierre de Orden o cerrar orden por escritorio.
+		El endpoint recibe 2 datos: id anomalia y observacion.
+
+		Se cierre siempre y cuando no este comprometida ni cerrada.
+
+
+Actividades:14/02/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+
+
+Actividades:15/02/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+
+
+Actividades:06/03/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-reunion con oscar, carmen y antonio para definir actividades y carga.
+Actividad:
+
+
+Actividades:11/03/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+*-reunion con oscar verificar serverside
+*-reunion carlos rodriguez verificar cambios en proceso de guardado de archivo y exportar a excel
+*-se crean endpoint para exportar excel listas area central, contratistas, archivos_instancia.
+*-reunion con daniel retroalimentacion metodologia guardar archivos.
+*-end point consultar por nic y nis se añadieron campos faltantes.
+
+
+Actividades:12/03/2024
+----------------------------------------------------------
+*-reunion normal scrum.
+
+
+
+Actividades:18/03/2024
+----------------------------------------------------------
+
+pendientes:
+
+*-para la asignacion masiva tecnico validar para solo permita trabajar con el contratista del usuario.
+
+*-desasignacion tecnico
+{
+  "datos": {
+    "guardarArchivo": "Tiempo en guardar archivo: 964 Milisegundos.",
+    "cargueDataTemporal": "Tiempo en cargar la data a la tabla temporal: 767 Milisegundos.",
+    "procesamiento": null,
+    "tiempoTotal": null,
+    "id_soporte": 5163
+  },
+  "codigo": 1,
+  "mensaje": "ORA-06550: línea 1, columna 7:\nPLS-00201: el identificador 'AIRE.ORDENES' se debe declarar\nORA-06550: línea 1, columna 7:\nPL/SQL: Statement ignored",
+  "totalRecords": 0
+}
+
+*-validar que es el tipo de trabajo en la tabla de ordenes.
+

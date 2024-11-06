@@ -1,0 +1,35 @@
+{
+	"estado": 200,
+	"url": "https://www.google.com/home/id_user%B3379F4A5B87EE20F289C7BF4A81BC76/token%276AEE0CB40E087C6D0056DA47F07015",
+	"mensaje": "Se valido el token exitosamente.",
+	"datos": {
+		"id_usuario": 101,
+		"id_persona": 85,
+		"nombres_apellidos": "Pedro Sotter",
+		"identificacion": "1065376176",
+		"id_contratista": 6,
+		"id_contratista_persona": 2261,
+		"tipo_identificacion": "Cedula",
+		"zonas": [
+			{
+				"id_zona": 2,
+				"nombre_zona": "Atlantico Norte"
+			}
+		],
+		"perfiles": [
+			{
+				"id_perfil": 1,
+				"nombre_perfil": "Administrador Syspotec"
+			}
+		],
+		"menus": [
+			{
+				"id_menu": 743,
+				"nombre": "SCR",
+				"icono": "fa-hashtag",
+				"orden": 10,
+				"permisos": []
+			}
+		]
+	}
+}

@@ -1,0 +1,27 @@
+// BUILD
+docker build --build-arg AppEnv=Development -t backop360dev .
+
+// CHANGE NAME
+docker image tag backop360dev 73197546/backop360dev:1.0.1
+
+// PUSH
+docker push 73197546/backop360dev:1.0.1
+
+// PULL
+docker pull 73197546/backop360dev:1.0.1
+
+// RUN
+docker run -d -p 8083:80 -v /home/sysadmin/filesOp360/op360files:/app/archivos 73197546/backop360dev:1.0.1
+docker run -d -p 8083:80 -v /image01/op360files:/app/archivos 73197546/backop360dev:1.0.1
+
+docker run -p 8083:80 -v /home/sysadmin/filesOp360/op360files/scr/files:/app/scr/files 
+                      -v /home/sysadmin/filesOp360/op360files/scr/images:/app/scr/images  
+                      -v /home/sysadmin/filesOp360/op360files/gos/files:/app/gos/files 
+                      -v /home/sysadmin/filesOp360/op360files/gos/images:/app/gos/images  
+                      73197546/backop360dev:1.0.1
+
+docker run -p 8083:80 -v /home/sysadmin/filesOp360/op360files/scr/files:/app/scr/files -v /home/sysadmin/filesOp360/op360files/scr/images:/app/scr/images -v /home/sysadmin/filesOp360/op360files/gos/files:/app/gos/files -v /home/sysadmin/filesOp360/op360files/gos/images:/app/gos/images 73197546/backop360dev:1.0.1
+
+
+
+docker run -d -p 8083:80 -v /home/sysadmin/filesOp360/op360files:/app/archivos 73197546/backop360dev:1.0.1

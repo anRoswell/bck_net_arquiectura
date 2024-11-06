@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="573" leftMargin="11" rightMargin="11" topMargin="11" bottomMargin="11" uuid="688087d7-d452-4395-bc11-3601b241c69d">
+	<property name="ireport.zoom" value="2.3579476910000103"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="FondoAzul" mode="Opaque" forecolor="#FFFFFF" backcolor="#273580" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="TablaFieldsAzul" mode="Opaque" forecolor="#FFFFFF" backcolor="#273580" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box>
+			<pen lineColor="#273580"/>
+			<topPen lineColor="#273580"/>
+			<leftPen lineColor="#273580"/>
+			<bottomPen lineColor="#273580"/>
+			<rightPen lineColor="#273580"/>
+		</box>
+	</style>
+	<style name="FondoAzul_1" mode="Opaque" forecolor="#FFFFFF" backcolor="#B9D1EA" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<parameter name="prIdOrden" class="java.lang.String"/>
+	<parameter name="prIdImg" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+      nvl(a.id_orden,-1) as id_orden
+     ,UPPER(c.localidad) as localidad
+     ,nvl(q.acta,'0') as acta2
+     --,(SELECT ruta_web FROM aire.gnl_rutas_archivo_servidor where id_ruta_archivo_servidor = 7) as Logo
+     ,(SELECT ruta_web FROM aire.gnl_rutas_archivo_servidor where id_ruta_archivo_servidor = 77) as Logo
+     , 'v_1.0.5 -- 11/04/2024' as version
+from aire.ord_ordenes a
+left join aire.gnl_clientes        c  on c.id_cliente = a.id_cliente
+left join (
+      select
+              subq.id_orden
+            , subq.acta
+      from (
+            select
+                    qs.id_orden
+                  , qs.acta
+                  , row_number() over (partition by qs.id_orden order by qs.id_orden_gestion) as rn
+            from aire.ord_ordenes_gestion qs
+      ) subq
+      where subq.rn = 1
+)                                                     q       on q.id_orden = a.id_orden
+where a.id_orden =  $P{prIdOrden}]]>
+	</queryString>
+	<field name="ID_ORDEN" class="java.math.BigDecimal"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<field name="ACTA2" class="java.math.BigDecimal"/>
+	<field name="LOGO" class="java.lang.String"/>
+	<field name="VERSION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement style="FondoAzul" mode="Opaque" x="250" y="5" width="292" height="42" isPrintWhenDetailOverflows="true" uuid="6c799f91-ba82-447e-a521-24dfcf18fca1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ACTA DE SUSPENSIÓN
+CORTE Y RECONEXIÓN]]></text>
+			</staticText>
+			<image>
+				<reportElement x="18" y="5" width="139" height="53" uuid="60871d95-ec9f-47f6-9625-51ca9529fa7d"/>
+				<imageExpression><![CDATA[$F{LOGO}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="728" splitType="Stretch">
+			<textField>
+				<reportElement mode="Transparent" x="68" y="4" width="145" height="16" uuid="3ebfacfc-8d3f-4f79-aa10-c0c749f08d76"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+					<topPen lineWidth="0.5" lineColor="#999999"/>
+					<leftPen lineWidth="0.5" lineColor="#999999"/>
+					<bottomPen lineWidth="0.5" lineColor="#999999"/>
+					<rightPen lineWidth="0.5" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="276" y="4" width="146" height="16" forecolor="#FF0000" uuid="cd50f6c3-32cd-40fb-93c5-e7f9ed3ac3f0"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+					<topPen lineWidth="0.5" lineColor="#999999"/>
+					<leftPen lineWidth="0.5" lineColor="#999999"/>
+					<bottomPen lineWidth="0.5" lineColor="#999999"/>
+					<rightPen lineWidth="0.5" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACTA2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="TablaFieldsAzul" x="4" y="4" width="64" height="16" uuid="b6b4b331-7538-4e42-a809-925741307c5b"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+					<topPen lineWidth="0.5" lineColor="#999999"/>
+					<leftPen lineWidth="0.5" lineColor="#999999"/>
+					<bottomPen lineWidth="0.5" lineColor="#999999"/>
+					<rightPen lineWidth="0.5" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[ CIUDAD :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="TablaFieldsAzul" x="217" y="4" width="59" height="16" uuid="80320f28-1983-4c68-b153-1f4bd542f299"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+					<topPen lineWidth="0.5" lineColor="#999999"/>
+					<leftPen lineWidth="0.5" lineColor="#999999"/>
+					<bottomPen lineWidth="0.5" lineColor="#999999"/>
+					<rightPen lineWidth="0.5" lineColor="#999999"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[ ACTA: ]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="11" uuid="ba817d15-b1c1-4243-9ec7-082252cd10a0"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VERSION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="481" y="0" width="61" height="11" uuid="7eab5ff8-e483-4cb9-a6f3-18a1554b99eb"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina: " + $V{PAGE_NUMBER} + " "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="542" y="0" width="26" height="11" uuid="8543d393-411b-43a1-a5cb-2a8a3b47709b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

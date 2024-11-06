@@ -1,0 +1,92 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="EPPlus" Version="6.1.0" />
+    <PackageReference Include="HtmlRenderer.PdfSharp.NetStandard2" Version="1.5.1.2" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.18.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="QRCoder" Version="1.4.1" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="DTOs\CargaInicialMovilDto\" />
+    <None Remove="DTOs\EncuestaInicialMovilDto\" />
+    <None Remove="DTOs\OrdenesAsignadasTecnicoMovilDto\" />
+    <None Remove="DTOs\CuestionarioInstanciasMovilDto\" />
+    <None Remove="DTOs\FilesDto\" />
+    <None Remove="Extensions\" />
+    <None Remove="DTOs\RegistrarGestionOrdenMovilDto\" />
+    <None Remove="Dtos\FiltrosDto\" />
+    <None Remove="Dtos\RechazarOrdenDto\" />
+    <None Remove="DTOs\ComprometerOrdenDto\" />
+    <None Remove="DTOs\CargaMasiva\" />
+    <None Remove="DTOs\Gos\" />
+    <None Remove="DTOs\Gos\Mobile\" />
+    <None Remove="DTOs\Gos\Mobile\CrearGestion\" />
+    <None Remove="DTOs\Gos\Mobile\ComprometerGestion\" />
+    <None Remove="DTOs\Gos\Mobile\ObtenerGestionesByGestorDto\" />
+    <None Remove="DTOs\Gos\Mobile\ProcesarGestionDto\" />
+    <None Remove="DTOs\Gos\Web\" />
+    <None Remove="DTOs\Gos\Web\CargaInicialGosDto\" />
+    <None Remove="DTOs\Gos\Web\GetOrdenById\" />
+    <None Remove="DTOs\Gos\Web\UpdateOrden\" />
+    <None Remove="DTOs\Gos\Web\CrearComentario\" />
+    <None Remove="DTOs\Gos\Web\ObtenerOrdenesTrabajoOficinaCentralDto\" />
+    <None Remove="DTOs\Gos\Web\AsignarDesasignarOrdenesAGestoresDto\" />
+    <None Remove="DTOs\Gos\Web\CargarOrdenesAreaCentral\" />
+    <None Remove="DTOs\Gos\Web\ObtenerArchivosInstancia\" />
+    <None Remove="DTOs\Gos\Web\ObtenerArchivosInstanciaDetalle\" />
+    <None Remove="DTOs\Gos\Web\CambiarEstadoOrden\" />
+    <None Remove="DTOs\Gos\Web\ConsultaOrdenesFechaDto\" />
+    <None Remove="DTOs\Gos\Web\GetSoporteById\" />
+    <None Remove="DTOs\Integration\Authentication\" />
+    <None Remove="DTOs\ObtenerReporteTraza\" />
+    <None Remove="DTOs\Logdto\" />
+    <None Remove="DTOs\Gos\Web\ConsultarOrdenesGestion\" />
+    <None Remove="DTOs\Gos\Web\Dashboard\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DTOs\CargaInicialMovilDto\" />
+    <Folder Include="DTOs\EncuestaInicialMovilDto\" />
+    <Folder Include="DTOs\OrdenesAsignadasTecnicoMovilDto\" />
+    <Folder Include="DTOs\CuestionarioInstanciasMovilDto\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="DTOs\RegistrarGestionOrdenMovilDto\" />
+    <Folder Include="Dtos\FiltrosDto\" />
+    <Folder Include="Dtos\RechazarOrdenDto\" />
+    <Folder Include="DTOs\ComprometerOrdenDto\" />
+    <Folder Include="DTOs\CargaMasiva\" />
+    <Folder Include="DTOs\Gos\Mobile\" />
+    <Folder Include="DTOs\Gos\Mobile\CrearGestion\" />
+    <Folder Include="DTOs\Gos\Mobile\ComprometerGestion\" />
+    <Folder Include="DTOs\Gos\Mobile\ObtenerGestionesByGestorDto\" />
+    <Folder Include="DTOs\Gos\Mobile\ProcesarGestionDto\" />
+    <Folder Include="DTOs\Gos\Web\GetOrdenById\" />
+    <Folder Include="DTOs\Gos\Web\UpdateOrden\" />
+    <Folder Include="DTOs\Gos\Web\CrearComentario\" />
+    <Folder Include="DTOs\Gos\Web\ObtenerOrdenesTrabajoOficinaCentralDto\" />
+    <Folder Include="DTOs\Gos\Web\AsignarDesasignarOrdenesAGestoresDto\" />
+    <Folder Include="DTOs\Gos\Web\CargarOrdenesAreaCentral\" />
+    <Folder Include="DTOs\Gos\Web\ObtenerArchivosInstancia\" />
+    <Folder Include="DTOs\Gos\Web\ObtenerArchivosInstanciaDetalle\" />
+    <Folder Include="DTOs\Gos\Web\CambiarEstadoOrden\" />
+    <Folder Include="DTOs\Gos\Web\ConsultaOrdenesFechaDto\" />
+    <Folder Include="DTOs\Gos\Web\GetSoporteById\" />
+    <Folder Include="DTOs\Integration\Authentication\" />
+    <Folder Include="DTOs\Logdto\" />
+    <Folder Include="DTOs\Gos\Web\ConsultarOrdenesGestion\" />
+    <Folder Include="DTOs\Gos\Web\Dashboard\" />
+  </ItemGroup>
+</Project>
